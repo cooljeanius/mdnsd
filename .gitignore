@@ -1,0 +1,11 @@
+*DS_Store*
+*~
+*.o
+*.dSYM
+*.status
+*.cache
+*.log
+stamp-h*
+mhttp
+mquery
+config.h

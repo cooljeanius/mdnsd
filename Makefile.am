@@ -1,0 +1,13 @@
+CC = @CC@
+RM = @RM@
+
+all: mquery mhttp
+
+mhttp: mhttp.c
+	${CC} -g -o mhttp mhttp.c mdnsd.c 1035.c sdtxt.c xht.c
+
+mquery: mquery.c
+	${CC} -g -o mquery mquery.c mdnsd.c 1035.c
+
+clean:
+	${RM} -f mquery mhttp
