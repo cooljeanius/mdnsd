@@ -23,13 +23,14 @@ AC_PATH_PROG([RM],[rm])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([errno.h fcntl.h netinet/in.h signal.h string.h sys/socket.h sys/time.h sys/types.h])
+AC_CHECK_HEADERS([errno.h fcntl.h netinet/in.h signal.h stdio.h string.h strings.h sys/socket.h sys/time.h sys/types.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_TYPES([socklen_t])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([bzero exit gettimeofday inet_ntoa memcpy printf select socket sprintf strchr strdup strerror strlen])
+AC_CHECK_FUNCS([atoi bzero close exit free gettimeofday inet_addr inet_ntoa memcpy pipe printf read select socket sprintf strchr strdup strerror strlen write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT
