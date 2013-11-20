@@ -1,7 +1,14 @@
+/*
+ * xht.c
+ */
+
 #include "xht.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+# include "config.h"
+#endif /* HAVE_CONFIG_H */
 
 typedef struct xhn_struct
 {
@@ -18,7 +25,7 @@ struct xht_struct
 };
 
 /* Generates a hash code for a string.
- * This function uses the ELF hashing algorithm as reprinted in 
+ * This function uses the ELF hashing algorithm as reprinted in
  * Andrew Binstock, "Hashing Rehashed," Dr. Dobb's Journal, April 1996.
  */
 int _xhter(const char *s)
@@ -168,3 +175,4 @@ void xht_walk(xht h, xht_walker w, void *arg)
                 (*w)(h, n->key, n->val, arg);
 }
 
+/* EOF */

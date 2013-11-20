@@ -1,5 +1,5 @@
-CC = gcc
-RM = /bin/rm
+CC = gcc-4.2
+RM = @RM@
 
 all: mquery mhttp
 

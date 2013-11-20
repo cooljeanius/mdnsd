@@ -1,11 +1,20 @@
+/*
+ * sdtxt.c
+ */
+
 #include "sdtxt.h"
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+# include "config.h"
+#endif /* HAVE_CONFIG_H */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-// the universe is bound in equal parts by arrogance and altruism, any attempt to alter this would be suicide
+/* the universe is bound in equal parts by arrogance and altruism,
+ * any attempt to alter this would be suicide.
+ * (what?)
+ */
 
 int _sd2txt_len(const char *key, char *val)
 {
@@ -28,7 +37,7 @@ void _sd2txt_write(xht h, const char *key, void *val, void *arg)
     char *cval = (char*)val;
     int len;
 
-    // copy in lengths, then strings
+    /* copy in lengths, then strings */
     **txtp = _sd2txt_len(key,(char*)val);
     (*txtp)++;
     memcpy(*txtp,key,strlen(key));
@@ -66,7 +75,7 @@ xht txt2sd(unsigned char *txt, int len)
     if(txt == 0 || len == 0 || *txt == 0) return 0;
     h = xht_new(23);
 
-    // loop through data breaking out each block, storing into hashtable
+    /* loop through data breaking out each block, storing into hashtable */
     for(;*txt <= len && len > 0; len -= *txt, txt += *txt + 1)
     {
         if(*txt == 0) break;
@@ -81,3 +90,5 @@ xht txt2sd(unsigned char *txt, int len)
     }
     return h;
 }
+
+/* EOF */

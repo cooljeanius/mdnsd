@@ -1,3 +1,7 @@
+/*
+ * mhttp.c
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,21 +12,22 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
+#include <unistd.h>
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+# include "config.h"
+#endif /* HAVE_CONFIG_H */
 
 #include "mdnsd.h"
 #include "sdtxt.h"
 
-// conflict!
+/* conflict! */
 void con(char *name, int type, void *arg)
 {
     printf("conflicting name detected %s for type %d\n",name,type);
     exit(1);
 }
 
-// quit
+/* quit */
 int _shutdown = 0;
 mdnsd _d;
 int _zzz[2];
@@ -33,7 +38,7 @@ void done(int sig)
     write(_zzz[1]," ",1);
 }
 
-// create multicast 224.0.0.251:5353 socket
+/* create multicast 224.0.0.251:5353 socket */
 int msock()
 {
     int s, flag = 1, ittl = 255;
@@ -49,13 +54,13 @@ int msock()
     if((s = socket(AF_INET,SOCK_DGRAM,0)) < 0) return 0;
 #ifdef SO_REUSEPORT
     setsockopt(s, SOL_SOCKET, SO_REUSEPORT, (char*)&flag, sizeof(flag));
-#endif
+#endif /* SO_REUSEPORT */
     setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char*)&flag, sizeof(flag));
     if(bind(s,(struct sockaddr*)&in,sizeof(in))) { close(s); return 0; }
 
     mc.imr_multiaddr.s_addr = inet_addr("224.0.0.251");
     mc.imr_interface.s_addr = htonl(INADDR_ANY);
-    setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mc, sizeof(mc)); 
+    setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mc, sizeof(mc));
     setsockopt(s, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
     setsockopt(s, IPPROTO_IP, IP_MULTICAST_TTL, &ittl, sizeof(ittl));
 
@@ -95,7 +100,7 @@ int main(int argc, char *argv[])
     signal(SIGTERM,done);
     pipe(_zzz);
     _d = d = mdnsd_new(1,1000);
-    if((s = msock()) == 0) { printf("can't create socket: %s\n",strerror(errno)); return 1; }
+    if((s = msock()) == 0) { printf("cannot create socket: %s\n",strerror(errno)); return 1; }
 
     sprintf(hlocal,"%s._http._tcp.local.",argv[1]);
     sprintf(nlocal,"http-%s.local.",argv[1]);
@@ -121,7 +126,7 @@ int main(int argc, char *argv[])
         FD_SET(s,&fds);
         select(s+1,&fds,0,0,tv);
 
-        // only used when we wake-up from a signal, shutting down
+        /* only used when we wake-up from a signal, shutting down */
         if(FD_ISSET(_zzz[0],&fds)) read(_zzz[0],buf,MAX_PACKET_LEN);
 
         if(FD_ISSET(s,&fds))
@@ -132,7 +137,7 @@ int main(int argc, char *argv[])
                 message_parse(&m,buf);
                 mdnsd_in(d,&m,(unsigned long int)from.sin_addr.s_addr,from.sin_port);
             }
-            if(bsize < 0 && errno != EAGAIN) { printf("can't read from socket %d: %s\n",errno,strerror(errno)); return 1; }
+            if(bsize < 0 && errno != EAGAIN) { printf("cannot read from socket %d: %s\n",errno,strerror(errno)); return 1; }
         }
         while(mdnsd_out(d,&m,&ip,&port))
         {
@@ -140,7 +145,7 @@ int main(int argc, char *argv[])
             to.sin_family = AF_INET;
             to.sin_port = port;
             to.sin_addr.s_addr = ip;
-            if(sendto(s,message_packet(&m),message_packet_len(&m),0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(&m))  { printf("can't write to socket: %s\n",strerror(errno)); return 1; }
+            if(sendto(s,message_packet(&m),message_packet_len(&m),0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(&m))  { printf("cannot write to socket: %s\n",strerror(errno)); return 1; }
         }
         if(_shutdown) break;
     }
@@ -150,3 +155,4 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+/* EOF */

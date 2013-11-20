@@ -1,8 +1,14 @@
+/*
+ * 1035.c
+ */
+
 #include "1035.h"
-#include <string.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+# include "config.h"
+#endif /* HAVE_CONFIG_H */
 
 unsigned short int net2short(unsigned char **bufp)
 {
@@ -33,7 +39,7 @@ void short2net(unsigned short int i, unsigned char **bufp)
     *(*bufp + 1) = (unsigned char)i;
     i >>= 8;
     **bufp = (unsigned char)i;
-    *bufp += 2;    
+    *bufp += 2;
 }
 
 void long2net(unsigned long int l, unsigned char **bufp)
@@ -63,29 +69,29 @@ void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
     unsigned char *label, *name;
     int x;
 
-    // set namep to the end of the block
+    /* set namep to the end of the block */
     *namep = name = m->_packet + m->_len;
 
-    // loop storing label in the block
+    /* loop storing label in the block */
     for(label = *bufp; *label != 0; name += *label + 1, label += *label + 1)
     {
-        // skip past any compression pointers, kick out if end encountered (bad data prolly)
+        /* skip past any compression pointers, kick out if end encountered (bad data prolly) */
         while(*label & 0xc0)
             if(*(label = m->_buf + _ldecomp(label)) == 0) break;
 
-        // make sure we're not over the limits
+        /* make sure we are/were not over the limits */
         if((name + *label) - *namep > 255 || m->_len + ((name + *label) - *namep) > 4096) return;
 
-        // copy chars for this label
+        /* copy chars for this label */
         memcpy(name,label+1,*label);
         name[*label] = '.';
-    } 
+    }
 
-    // advance buffer
+    /* advance buffer */
     for(label = *bufp; *label != 0 && !(*label & 0xc0 && label++); label += *label + 1);
     *bufp = label + 1;
 
-    // terminate name and check for cache or cache it
+    /* terminate name and check for cache or cache it */
     *name = '\0';
     for(x = 0; x <= 19 && m->_labels[x]; x++)
     {
@@ -93,41 +99,41 @@ void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
         *namep = m->_labels[x];
         return;
     }
-    // no cache, so cache it if room
+    /* no cache, so cache it if room */
     if(x <= 19 && m->_labels[x] == 0)
         m->_labels[x] = *namep;
     m->_len += (name - *namep) + 1;
 }
 
-// internal label matching
+/* internal label matching */
 int _lmatch(struct message *m, unsigned char *l1, unsigned char *l2)
 {
     int len;
 
-    // always ensure we get called w/o a pointer
+    /* always ensure we get called w/o a pointer */
     if(*l1 & 0xc0) return _lmatch(m, m->_buf + _ldecomp(l1),l2);
     if(*l2 & 0xc0) return _lmatch(m, l1, m->_buf + _ldecomp(l2));
-    
-    // same already?
+
+    /* same already? */
     if(l1 == l2) return 1;
-    
-    // compare all label characters
+
+    /* compare all label characters */
     if(*l1 != *l2) return 0;
-    for(len = 1; len <= *l1; len++) 
+    for(len = 1; len <= *l1; len++)
         if(l1[len] != l2[len]) return 0;
 
-    // get new labels
+    /* get new labels */
     l1 += *l1 + 1;
     l2 += *l2 + 1;
-    
-    // at the end, all matched
+
+    /* at the end, all matched */
     if(*l1 == 0 && *l2 == 0) return 1;
-    
-    // try next labels
+
+    /* try next labels */
     return _lmatch(m,l1,l2);
 }
 
-// nasty, convert host into label using compression
+/* nasty, convert host into label using compression */
 int _host(struct message *m, unsigned char **bufp, unsigned char *name)
 {
     unsigned char label[256], *l;
@@ -135,7 +141,7 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
 
     if(name == 0) return 0;
 
-    // make our label
+    /* make our label */
     while(name[y])
     {
         if(name[y] == '.')
@@ -150,17 +156,17 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
         y++;
     }
     label[last] = x - (last + 1);
-    if(x == 1) x--; // special case, bad names, but handle correctly
+    if(x == 1) x--; /* special case, bad names, but handle correctly */
     len = x + 1;
-    label[x] = 0; // always terminate w/ a 0
+    label[x] = 0; /* always terminate w/ a 0 */
 
-    // double-loop checking each label against all m->_labels for match
+    /* double-loop checking each label against all m->_labels for match */
     for(x = 0; label[x]; x += label[x] + 1)
     {
         for(y = 0; m->_labels[y]; y++)
             if(_lmatch(m,label+x,m->_labels[y]))
             {
-                // matching label, set up pointer
+                /* matching label, set up pointer */
                 l = label + x;
                 short2net(m->_labels[y] - m->_packet, &l);
                 label[x] |= 0xc0;
@@ -170,12 +176,12 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
         if(label[x] & 0xc0) break;
     }
 
-    // copy into buffer, point there now
+    /* copy into buffer, point there now */
     memcpy(*bufp,label,len);
     l = *bufp;
     *bufp += len;
 
-    // for each new label, store it's location for future compression
+    /* for each new label, store its location for future compression */
     for(x = 0; l[x]; x += l[x] + 1)
     {
         if(l[x] & 0xc0) break;
@@ -197,13 +203,13 @@ int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **
         rr[i].ttl = net2long(bufp);
         rr[i].rdlength = net2short(bufp);
 
-        // if not going to overflow, make copy of source rdata
+        /* if not going to overflow, make copy of source rdata */
         if(rr[i].rdlength + (*bufp - m->_buf) > MAX_PACKET_LEN || m->_len + rr[i].rdlength > MAX_PACKET_LEN) return 1;
         rr[i].rdata = m->_packet + m->_len;
         m->_len += rr[i].rdlength;
         memcpy(rr[i].rdata,*bufp,rr[i].rdlength);
 
-        // parse commonly known ones
+        /* parse commonly known ones */
         switch(rr[i].type)
         {
         case 1:
@@ -227,7 +233,7 @@ int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **
             rr[i].known.srv.weight = net2short(bufp);
             rr[i].known.srv.port = net2short(bufp);
             _label(m, bufp, &(rr[i].known.srv.name));
-            break;            
+            break;
         default:
             *bufp += rr[i].rdlength;
         }
@@ -240,13 +246,16 @@ void message_parse(struct message *m, unsigned char *packet)
 {
     unsigned char *buf;
     int i;
-    
+
     if(packet == 0 || m == 0) return;
 
-    // keep all our mem in one (aligned) block for easy freeing
+    /* keep all our mem in one (aligned) block for easy freeing */
     #define my(x,y) while(m->_len&7) m->_len++; (void*)x = (void*)(m->_packet + m->_len); m->_len += y;
+	/* newer versions of gcc treat the above as a hard error;
+	 * use an older version of gcc to be able to compile with just warnings
+	 */
 
-    // header stuff bit crap
+    /* header stuff bit crap */
     m->_buf = buf = packet;
     m->id = net2short(&buf);
     if(buf[0] & 0x80) m->header.qr = 1;
@@ -267,7 +276,7 @@ void message_parse(struct message *m, unsigned char *packet)
     m->arcount = net2short(&buf);
     if(m->_len + (sizeof(struct resource) * m->arcount) > MAX_PACKET_LEN - 8) { m->arcount = 0; return; }
 
-    // process questions
+    /* process questions */
     my(m->qd, sizeof(struct question) * m->qdcount);
     for(i=0; i < m->qdcount; i++)
     {
@@ -276,7 +285,7 @@ void message_parse(struct message *m, unsigned char *packet)
         m->qd[i].class = net2short(&buf);
     }
 
-    // process rrs
+    /* process rrs */
     my(m->an, sizeof(struct resource) * m->ancount);
     my(m->ns, sizeof(struct resource) * m->nscount);
     my(m->ar, sizeof(struct resource) * m->arcount);
@@ -288,7 +297,7 @@ void message_parse(struct message *m, unsigned char *packet)
 void message_qd(struct message *m, unsigned char *name, unsigned short int type, unsigned short int class)
 {
     m->qdcount++;
-    if(m->_buf == 0) m->_buf = m->_packet + 12; // initialization
+    if(m->_buf == 0) m->_buf = m->_packet + 12; /* initialization */
     _host(m, &(m->_buf), name);
     short2net(type, &(m->_buf));
     short2net(class, &(m->_buf));
@@ -296,7 +305,7 @@ void message_qd(struct message *m, unsigned char *name, unsigned short int type,
 
 void _rrappend(struct message *m, unsigned char *name, unsigned short int type, unsigned short int class, unsigned long int ttl)
 {
-    if(m->_buf == 0) m->_buf = m->_packet + 12; // initialization
+    if(m->_buf == 0) m->_buf = m->_packet + 12; /* initialization */
     _host(m, &(m->_buf), name);
     short2net(type, &(m->_buf));
     short2net(class, &(m->_buf));
@@ -331,7 +340,7 @@ void message_rdata_name(struct message *m, unsigned char *name)
 {
     unsigned char *mybuf = m->_buf;
     m->_buf += 2;
-    short2net(_host(m, &(m->_buf), name),&mybuf); // hackish, but cute
+    short2net(_host(m, &(m->_buf), name),&mybuf); /* hackish, but cute */
 }
 
 void message_rdata_srv(struct message *m, unsigned short int priority, unsigned short int weight, unsigned short int port, unsigned char *name)
@@ -370,7 +379,7 @@ unsigned char *message_packet(struct message *m)
     short2net(m->ancount, &(m->_buf));
     short2net(m->nscount, &(m->_buf));
     short2net(m->arcount, &(m->_buf));
-    m->_buf = buf; // restore, so packet_len works
+    m->_buf = buf; /* restore, so packet_len works */
     return m->_packet;
 }
 
@@ -379,3 +388,5 @@ int message_packet_len(struct message *m)
     if(m->_buf == 0) return 12;
     return m->_buf - m->_packet;
 }
+
+/* EOF */
