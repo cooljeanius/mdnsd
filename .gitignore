@@ -24,3 +24,4 @@ cscope*.out
 cscope.files
 config*.lineno
 *deps/*.*o
+*.tab.c
