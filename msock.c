@@ -2,11 +2,16 @@
  * msock.c
  */
 
-#include <arpa/inet.h> /* for htonl(), htons(), inet_addr() */
+#include <arpa/inet.h> /* for htonl(), htons(), and inet_addr() */
 #include <fcntl.h> /* for fcntl() */
 #include <strings.h> /* for bzero() */
 #include <sys/socket.h> /* for setsockopt() */
 #include <unistd.h> /* for close() */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_SOCK_C 1
+#endif /* HAVE_CONFIG_H */
 
 #include "msock.h"
 

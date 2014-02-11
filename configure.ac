@@ -46,7 +46,7 @@ AC_REQUIRE_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
                   malloc.h malloc/malloc.h signal.h stdio.h \
-                  sys/socket.h sys/time.h time.h])
+                  sys/socket.h sys/time.h time.h xlocale.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -58,10 +58,11 @@ AC_CHECK_TYPES([socklen_t])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([addr2ascii atoi bind bzero close exit free gettimeofday \
-                htonl htons inet_addr inet_lnaof inet_makeaddr inet_ntoa \
-                memcpy pipe printf read select setsockopt socket sprintf \
-                strchr strcmp strdup strerror strlen time write])
+AC_CHECK_FUNCS([addr2ascii atoi bind bzero close exit errno free \
+                gettimeofday htonl htons inet_addr inet_lnaof \
+                inet_makeaddr inet_ntoa memcpy pipe printf read select \
+                sendto setsockopt socket sprintf strchr strcmp strdup \
+                strerror strlen time write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT

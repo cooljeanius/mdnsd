@@ -26,9 +26,13 @@ cscope.files
 config*.lineno
 conf*/*.awk
 *deps/*.*o
+*libs/*
 *.tab.c
 *.gch
 *(Autosaved)*
 lib*.a
 libtool
+*.dylib
+*.la
+*.lai
 

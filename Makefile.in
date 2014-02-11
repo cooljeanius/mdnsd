@@ -151,21 +151,12 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
 PROGRAMS = $(bin_PROGRAMS)
-am_mhttp_OBJECTS = mhttp-mhttp.$(OBJEXT) mhttp-msock.$(OBJEXT) \
-	mhttp-mdnsd.$(OBJEXT) mhttp-1035.$(OBJEXT) \
-	mhttp-sdtxt.$(OBJEXT) mhttp-xht.$(OBJEXT)
+am_mhttp_OBJECTS = mhttp_main.$(OBJEXT)
 mhttp_OBJECTS = $(am_mhttp_OBJECTS)
-mhttp_LDADD = $(LDADD)
-mhttp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(mhttp_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_mquery_OBJECTS = mquery-mquery.$(OBJEXT) mquery-msock.$(OBJEXT) \
-	mquery-mdnsd.$(OBJEXT) mquery-1035.$(OBJEXT)
+mhttp_DEPENDENCIES = libmdnsd.la
+am_mquery_OBJECTS = mquery_main.$(OBJEXT)
 mquery_OBJECTS = $(am_mquery_OBJECTS)
-mquery_LDADD = $(LDADD)
-mquery_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(mquery_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+mquery_DEPENDENCIES = libmdnsd.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -371,13 +362,13 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 AM_CFLAGS = -g -Wall -Wimplicit -Wno-unused -Wno-pointer-sign
-mhttp_SOURCES = mhttp.c msock.c mdnsd.c 1035.c sdtxt.c xht.c
-mhttp_CFLAGS = $(AM_CFLAGS)
-mquery_SOURCES = mquery.c msock.c mdnsd.c 1035.c
-mquery_CFLAGS = $(AM_CFLAGS)
+mhttp_SOURCES = mhttp_main.c
+mhttp_LDADD = libmdnsd.la
+mquery_SOURCES = mquery_main.c
+mquery_LDADD = libmdnsd.la
 lib_LTLIBRARIES = libmdnsd.la
 libmdnsd_la_SOURCES = 1035.c mdnsd.c mhttp.c mquery.c msock.c sdtxt.c xht.c
-include_HEADERS = 1035.h mdnsd.h msock.h sdtxt.h xht.h
+include_HEADERS = 1035.h mdnsd.h mhttp.h mquery.h msock.h sdtxt.h xht.h
 CLEANFILES = *~ core
 DISTCLEANFILES = autoscan.log
 all: config.h
@@ -526,11 +517,11 @@ clean-binPROGRAMS:
 
 mhttp$(EXEEXT): $(mhttp_OBJECTS) $(mhttp_DEPENDENCIES) $(EXTRA_mhttp_DEPENDENCIES) 
 	@rm -f mhttp$(EXEEXT)
-	$(AM_V_CCLD)$(mhttp_LINK) $(mhttp_OBJECTS) $(mhttp_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(mhttp_OBJECTS) $(mhttp_LDADD) $(LIBS)
 
 mquery$(EXEEXT): $(mquery_OBJECTS) $(mquery_DEPENDENCIES) $(EXTRA_mquery_DEPENDENCIES) 
 	@rm -f mquery$(EXEEXT)
-	$(AM_V_CCLD)$(mquery_LINK) $(mquery_OBJECTS) $(mquery_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(mquery_OBJECTS) $(mquery_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -540,18 +531,10 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/1035.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mdnsd.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-1035.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-mdnsd.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-mhttp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-msock.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-sdtxt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp-xht.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery-1035.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery-mdnsd.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery-mquery.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery-msock.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mhttp_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mquery_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msock.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sdtxt.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xht.Plo@am__quote@
@@ -576,146 +559,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
-
-mhttp-mhttp.o: mhttp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-mhttp.o -MD -MP -MF $(DEPDIR)/mhttp-mhttp.Tpo -c -o mhttp-mhttp.o `test -f 'mhttp.c' || echo '$(srcdir)/'`mhttp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-mhttp.Tpo $(DEPDIR)/mhttp-mhttp.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mhttp.c' object='mhttp-mhttp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-mhttp.o `test -f 'mhttp.c' || echo '$(srcdir)/'`mhttp.c
-
-mhttp-mhttp.obj: mhttp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-mhttp.obj -MD -MP -MF $(DEPDIR)/mhttp-mhttp.Tpo -c -o mhttp-mhttp.obj `if test -f 'mhttp.c'; then $(CYGPATH_W) 'mhttp.c'; else $(CYGPATH_W) '$(srcdir)/mhttp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-mhttp.Tpo $(DEPDIR)/mhttp-mhttp.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mhttp.c' object='mhttp-mhttp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-mhttp.obj `if test -f 'mhttp.c'; then $(CYGPATH_W) 'mhttp.c'; else $(CYGPATH_W) '$(srcdir)/mhttp.c'; fi`
-
-mhttp-msock.o: msock.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-msock.o -MD -MP -MF $(DEPDIR)/mhttp-msock.Tpo -c -o mhttp-msock.o `test -f 'msock.c' || echo '$(srcdir)/'`msock.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-msock.Tpo $(DEPDIR)/mhttp-msock.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='msock.c' object='mhttp-msock.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-msock.o `test -f 'msock.c' || echo '$(srcdir)/'`msock.c
-
-mhttp-msock.obj: msock.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-msock.obj -MD -MP -MF $(DEPDIR)/mhttp-msock.Tpo -c -o mhttp-msock.obj `if test -f 'msock.c'; then $(CYGPATH_W) 'msock.c'; else $(CYGPATH_W) '$(srcdir)/msock.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-msock.Tpo $(DEPDIR)/mhttp-msock.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='msock.c' object='mhttp-msock.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-msock.obj `if test -f 'msock.c'; then $(CYGPATH_W) 'msock.c'; else $(CYGPATH_W) '$(srcdir)/msock.c'; fi`
-
-mhttp-mdnsd.o: mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-mdnsd.o -MD -MP -MF $(DEPDIR)/mhttp-mdnsd.Tpo -c -o mhttp-mdnsd.o `test -f 'mdnsd.c' || echo '$(srcdir)/'`mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-mdnsd.Tpo $(DEPDIR)/mhttp-mdnsd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mdnsd.c' object='mhttp-mdnsd.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-mdnsd.o `test -f 'mdnsd.c' || echo '$(srcdir)/'`mdnsd.c
-
-mhttp-mdnsd.obj: mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-mdnsd.obj -MD -MP -MF $(DEPDIR)/mhttp-mdnsd.Tpo -c -o mhttp-mdnsd.obj `if test -f 'mdnsd.c'; then $(CYGPATH_W) 'mdnsd.c'; else $(CYGPATH_W) '$(srcdir)/mdnsd.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-mdnsd.Tpo $(DEPDIR)/mhttp-mdnsd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mdnsd.c' object='mhttp-mdnsd.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-mdnsd.obj `if test -f 'mdnsd.c'; then $(CYGPATH_W) 'mdnsd.c'; else $(CYGPATH_W) '$(srcdir)/mdnsd.c'; fi`
-
-mhttp-1035.o: 1035.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-1035.o -MD -MP -MF $(DEPDIR)/mhttp-1035.Tpo -c -o mhttp-1035.o `test -f '1035.c' || echo '$(srcdir)/'`1035.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-1035.Tpo $(DEPDIR)/mhttp-1035.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='1035.c' object='mhttp-1035.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-1035.o `test -f '1035.c' || echo '$(srcdir)/'`1035.c
-
-mhttp-1035.obj: 1035.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-1035.obj -MD -MP -MF $(DEPDIR)/mhttp-1035.Tpo -c -o mhttp-1035.obj `if test -f '1035.c'; then $(CYGPATH_W) '1035.c'; else $(CYGPATH_W) '$(srcdir)/1035.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-1035.Tpo $(DEPDIR)/mhttp-1035.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='1035.c' object='mhttp-1035.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-1035.obj `if test -f '1035.c'; then $(CYGPATH_W) '1035.c'; else $(CYGPATH_W) '$(srcdir)/1035.c'; fi`
-
-mhttp-sdtxt.o: sdtxt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-sdtxt.o -MD -MP -MF $(DEPDIR)/mhttp-sdtxt.Tpo -c -o mhttp-sdtxt.o `test -f 'sdtxt.c' || echo '$(srcdir)/'`sdtxt.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-sdtxt.Tpo $(DEPDIR)/mhttp-sdtxt.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='sdtxt.c' object='mhttp-sdtxt.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-sdtxt.o `test -f 'sdtxt.c' || echo '$(srcdir)/'`sdtxt.c
-
-mhttp-sdtxt.obj: sdtxt.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-sdtxt.obj -MD -MP -MF $(DEPDIR)/mhttp-sdtxt.Tpo -c -o mhttp-sdtxt.obj `if test -f 'sdtxt.c'; then $(CYGPATH_W) 'sdtxt.c'; else $(CYGPATH_W) '$(srcdir)/sdtxt.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-sdtxt.Tpo $(DEPDIR)/mhttp-sdtxt.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='sdtxt.c' object='mhttp-sdtxt.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-sdtxt.obj `if test -f 'sdtxt.c'; then $(CYGPATH_W) 'sdtxt.c'; else $(CYGPATH_W) '$(srcdir)/sdtxt.c'; fi`
-
-mhttp-xht.o: xht.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-xht.o -MD -MP -MF $(DEPDIR)/mhttp-xht.Tpo -c -o mhttp-xht.o `test -f 'xht.c' || echo '$(srcdir)/'`xht.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-xht.Tpo $(DEPDIR)/mhttp-xht.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='xht.c' object='mhttp-xht.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-xht.o `test -f 'xht.c' || echo '$(srcdir)/'`xht.c
-
-mhttp-xht.obj: xht.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -MT mhttp-xht.obj -MD -MP -MF $(DEPDIR)/mhttp-xht.Tpo -c -o mhttp-xht.obj `if test -f 'xht.c'; then $(CYGPATH_W) 'xht.c'; else $(CYGPATH_W) '$(srcdir)/xht.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mhttp-xht.Tpo $(DEPDIR)/mhttp-xht.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='xht.c' object='mhttp-xht.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mhttp_CFLAGS) $(CFLAGS) -c -o mhttp-xht.obj `if test -f 'xht.c'; then $(CYGPATH_W) 'xht.c'; else $(CYGPATH_W) '$(srcdir)/xht.c'; fi`
-
-mquery-mquery.o: mquery.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-mquery.o -MD -MP -MF $(DEPDIR)/mquery-mquery.Tpo -c -o mquery-mquery.o `test -f 'mquery.c' || echo '$(srcdir)/'`mquery.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-mquery.Tpo $(DEPDIR)/mquery-mquery.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mquery.c' object='mquery-mquery.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-mquery.o `test -f 'mquery.c' || echo '$(srcdir)/'`mquery.c
-
-mquery-mquery.obj: mquery.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-mquery.obj -MD -MP -MF $(DEPDIR)/mquery-mquery.Tpo -c -o mquery-mquery.obj `if test -f 'mquery.c'; then $(CYGPATH_W) 'mquery.c'; else $(CYGPATH_W) '$(srcdir)/mquery.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-mquery.Tpo $(DEPDIR)/mquery-mquery.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mquery.c' object='mquery-mquery.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-mquery.obj `if test -f 'mquery.c'; then $(CYGPATH_W) 'mquery.c'; else $(CYGPATH_W) '$(srcdir)/mquery.c'; fi`
-
-mquery-msock.o: msock.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-msock.o -MD -MP -MF $(DEPDIR)/mquery-msock.Tpo -c -o mquery-msock.o `test -f 'msock.c' || echo '$(srcdir)/'`msock.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-msock.Tpo $(DEPDIR)/mquery-msock.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='msock.c' object='mquery-msock.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-msock.o `test -f 'msock.c' || echo '$(srcdir)/'`msock.c
-
-mquery-msock.obj: msock.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-msock.obj -MD -MP -MF $(DEPDIR)/mquery-msock.Tpo -c -o mquery-msock.obj `if test -f 'msock.c'; then $(CYGPATH_W) 'msock.c'; else $(CYGPATH_W) '$(srcdir)/msock.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-msock.Tpo $(DEPDIR)/mquery-msock.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='msock.c' object='mquery-msock.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-msock.obj `if test -f 'msock.c'; then $(CYGPATH_W) 'msock.c'; else $(CYGPATH_W) '$(srcdir)/msock.c'; fi`
-
-mquery-mdnsd.o: mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-mdnsd.o -MD -MP -MF $(DEPDIR)/mquery-mdnsd.Tpo -c -o mquery-mdnsd.o `test -f 'mdnsd.c' || echo '$(srcdir)/'`mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-mdnsd.Tpo $(DEPDIR)/mquery-mdnsd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mdnsd.c' object='mquery-mdnsd.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-mdnsd.o `test -f 'mdnsd.c' || echo '$(srcdir)/'`mdnsd.c
-
-mquery-mdnsd.obj: mdnsd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-mdnsd.obj -MD -MP -MF $(DEPDIR)/mquery-mdnsd.Tpo -c -o mquery-mdnsd.obj `if test -f 'mdnsd.c'; then $(CYGPATH_W) 'mdnsd.c'; else $(CYGPATH_W) '$(srcdir)/mdnsd.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-mdnsd.Tpo $(DEPDIR)/mquery-mdnsd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mdnsd.c' object='mquery-mdnsd.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-mdnsd.obj `if test -f 'mdnsd.c'; then $(CYGPATH_W) 'mdnsd.c'; else $(CYGPATH_W) '$(srcdir)/mdnsd.c'; fi`
-
-mquery-1035.o: 1035.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-1035.o -MD -MP -MF $(DEPDIR)/mquery-1035.Tpo -c -o mquery-1035.o `test -f '1035.c' || echo '$(srcdir)/'`1035.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-1035.Tpo $(DEPDIR)/mquery-1035.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='1035.c' object='mquery-1035.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-1035.o `test -f '1035.c' || echo '$(srcdir)/'`1035.c
-
-mquery-1035.obj: 1035.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -MT mquery-1035.obj -MD -MP -MF $(DEPDIR)/mquery-1035.Tpo -c -o mquery-1035.obj `if test -f '1035.c'; then $(CYGPATH_W) '1035.c'; else $(CYGPATH_W) '$(srcdir)/1035.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mquery-1035.Tpo $(DEPDIR)/mquery-1035.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='1035.c' object='mquery-1035.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mquery_CFLAGS) $(CFLAGS) -c -o mquery-1035.obj `if test -f '1035.c'; then $(CYGPATH_W) '1035.c'; else $(CYGPATH_W) '$(srcdir)/1035.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
