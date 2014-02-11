@@ -34,9 +34,10 @@ AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
   AC_REQUIRE([AC_HEADER_STDC])
 ])
 AC_REQUIRE_HEADER_STDC
+AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
                   malloc.h malloc/malloc.h signal.h stdio.h \
-                  sys/socket.h sys/time.h])
+                  sys/socket.h sys/time.h time.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -50,7 +51,7 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([addr2ascii atoi bzero close exit free gettimeofday \
                 inet_addr inet_lnaof inet_makeaddr inet_ntoa memcpy \
                 pipe printf read select socket sprintf strchr strcmp \
-                strdup strerror strlen write])
+                strdup strerror strlen time write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT

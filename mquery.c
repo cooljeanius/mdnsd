@@ -18,6 +18,21 @@
 # define NON_AUTOTOOLS_BUILD_FOR_MQUERY_C 1
 #endif /* HAVE_CONFIG_H */
 
+#ifdef TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# ifdef HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  ifdef HAVE_TIME_H
+#   include <time.h>
+#  else
+#   warning mquery.c expects a time-related header to be included.
+#  endif /* HAVE_TIME_H */
+# endif /* HAVE_SYS_TIME_H */
+#endif /* TIME_WITH_SYS_TIME */
+
 #include "mdnsd.h" /* for mdnsda struct */
 
 /* print an answer */
@@ -105,15 +120,13 @@ int main(int argc, char *argv[])
 
     mdnsd_query(d,argv[2],atoi(argv[1]),ans,0);
 
-    while(1)
-    {
+    while(1) {
         tv = mdnsd_sleep(d);
         FD_ZERO(&fds);
         FD_SET(s,&fds);
         select(s+1,&fds,0,0,tv);
 
-        if(FD_ISSET(s,&fds))
-        {
+        if(FD_ISSET(s,&fds)) {
             while((bsize = recvfrom(s,buf,MAX_PACKET_LEN,0,(struct sockaddr*)&from,&ssize)) > 0)
             {
                 bzero(&m,sizeof(struct message));
@@ -122,8 +135,7 @@ int main(int argc, char *argv[])
             }
             if(bsize < 0 && errno != EAGAIN) { printf("cannot read from socket %d: %s\n",errno,strerror(errno)); return 1; }
         }
-        while(mdnsd_out(d,&m,&ip,&port))
-        {
+        while(mdnsd_out(d,&m,&ip,&port)) {
             bzero(&to, sizeof(to));
             to.sin_family = AF_INET;
             to.sin_port = port;
