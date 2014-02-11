@@ -23,6 +23,9 @@ tags
 cscope*.out
 cscope.files
 config*.lineno
+conf*/*.awk
 *deps/*.*o
 *.tab.c
 *.gch
+*(Autosaved)*
+lib*.a

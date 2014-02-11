@@ -25,6 +25,10 @@ AC_DEFUN([AC_REQUIRE_COMPILER],[
   AC_SUBST([CFLAGS])
 ])
 AC_REQUIRE_COMPILER
+AM_PROG_AR
+AC_PROG_INSTALL
+AC_PROG_MKDIR_P
+AC_PROG_RANLIB
 AC_PATH_PROG([RM_PROG],[rm])
 AC_SUBST([RM_PROG])
 
@@ -42,6 +46,7 @@ AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 AC_C_CHAR_UNSIGNED
+AC_C_CONST
 AC_C_PROTOTYPES
 AC_CHECK_TYPES([in_addr_t])
 AC_CHECK_TYPES([socklen_t])
