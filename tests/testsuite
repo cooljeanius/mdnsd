@@ -591,7 +591,8 @@ at_tested='../mhttp
 # numerical order.
 at_format='?'
 # Description of all the test groups.
-at_help_all=""
+at_help_all="1;testsuite.at:4;mdnsd programs runnability;mdnsd;
+"
 # List of the all the test groups.
 at_groups_all=`$as_echo "$at_help_all" | sed 's/;.*//'`
 
@@ -604,7 +605,7 @@ at_fn_validate_ranges ()
   for at_grp
   do
     eval at_value=\$$at_grp
-    if test $at_value -lt 1 || test $at_value -gt 0; then
+    if test $at_value -lt 1 || test $at_value -gt 1; then
       $as_echo "invalid test group: $at_value" >&2
       exit 1
     fi
@@ -1369,7 +1370,7 @@ IFS=$as_save_IFS
   esac
   if test -f "$at_program_"; then
     {
-      $as_echo "$at_srcdir/testsuite.at:1: $at_program_ --version"
+      $as_echo "$at_srcdir/testsuite.at:3: $at_program_ --version"
       "$at_program_" --version </dev/null
       echo
     } >&5 2>&1
@@ -1982,3 +1983,23 @@ exit 0
 ## ------------- ##
 ## Actual tests. ##
 ## ------------- ##
+#AT_START_1
+at_fn_group_banner 1 'testsuite.at:4' \
+  "mdnsd programs runnability" "                     "
+at_xfail=no
+(
+  $as_echo "1. $at_setup_line: testing $at_desc ..."
+  $at_traceon
+
+
+#TODO: fix the ".." for vpath builds
+
+../mhttp --version
+../mquery --version
+#TODO: make mhttp and mquery accept the "--version" command-line flag
+$as_echo "$at_setup_line" >"$at_check_line_file"
+  set +x
+  $at_times_p && times >"$at_times_file"
+) 5>&1 2>&1 7>&- | eval $at_tee_pipe
+read at_status <"$at_status_file"
+#AT_STOP_1

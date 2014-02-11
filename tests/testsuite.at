@@ -1,4 +1,13 @@
+# Process with autom4te to create an -*- Autotest -*- test suite.
+
 AT_INIT([mdnsd_testsuite])
+AT_SETUP([mdnsd programs runnability])
+AT_KEYWORDS([mdnsd])
 #TODO: fix the ".." for vpath builds
 AT_TESTED([../mhttp ../mquery])
+../mhttp --version
+../mquery --version
 #TODO: make mhttp and mquery accept the "--version" command-line flag
+AT_CLEANUP
+
+# ...now what?
