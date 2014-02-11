@@ -24,6 +24,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define to 1 if you have the `errno' function. */
+#undef HAVE_ERRNO
+
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
 
@@ -94,8 +97,14 @@
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT
 
+/* Define to 1 if you have the `sendto' function. */
+#undef HAVE_SENDTO
+
 /* Define to 1 if you have the `setsockopt' function. */
 #undef HAVE_SETSOCKOPT
+
+/* Define to 1 if you have the `signal' function. */
+#undef HAVE_SIGNAL
 
 /* Define to 1 if you have the <signal.h> header file. */
 #undef HAVE_SIGNAL_H
@@ -162,6 +171,9 @@
 
 /* Define to 1 if you have the `write' function. */
 #undef HAVE_WRITE
+
+/* Define to 1 if you have the <xlocale.h> header file. */
+#undef HAVE_XLOCALE_H
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

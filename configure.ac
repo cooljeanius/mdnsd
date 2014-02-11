@@ -22,12 +22,14 @@ AC_SYS_LARGEFILE
 AC_DEFUN([AC_REQUIRE_COMPILER],[
   AC_REQUIRE([AC_PROG_CC])
   AC_REQUIRE([AC_PROG_CPP])
+  AC_REQUIRE([AC_PROG_CXX])
   AC_REQUIRE([AC_PROG_GCC_TRADITIONAL])
   AC_SUBST([CFLAGS])
 ])
 AC_REQUIRE_COMPILER
 AM_PROG_AR
 AC_PROG_INSTALL
+AC_PROG_LN_S
 AC_PROG_MKDIR_P
 AC_PROG_RANLIB
 AC_PATH_PROG([RM_PROG],[rm])
@@ -61,8 +63,8 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([addr2ascii atoi bind bzero close exit errno free \
                 gettimeofday htonl htons inet_addr inet_lnaof \
                 inet_makeaddr inet_ntoa memcpy pipe printf read select \
-                sendto setsockopt socket sprintf strchr strcmp strdup \
-                strerror strlen time write])
+                sendto setsockopt signal socket sprintf strchr strcmp \
+                strdup strerror strlen time write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT
