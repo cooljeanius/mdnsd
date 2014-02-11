@@ -47,9 +47,9 @@ AC_CHECK_TYPES([socklen_t])
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([addr2ascii atoi bzero close exit free gettimeofday \
-                inet_addr inet_makeaddr inet_ntoa memcpy pipe printf \
-                read select socket sprintf strchr strcmp strdup strerror \
-                strlen write])
+                inet_addr inet_lnaof inet_makeaddr inet_ntoa memcpy \
+                pipe printf read select socket sprintf strchr strcmp \
+                strdup strerror strlen write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT

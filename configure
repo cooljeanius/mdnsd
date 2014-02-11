@@ -5151,6 +5151,16 @@ else
 $as_echo "no" >&6; }
 fi
 
+ac_fn_c_check_type "$LINENO" "in_addr_t" "ac_cv_type_in_addr_t" "$ac_includes_default"
+if test "x$ac_cv_type_in_addr_t" = xyes; then :
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_IN_ADDR_T 1
+_ACEOF
+
+
+fi
+
 ac_fn_c_check_type "$LINENO" "socklen_t" "ac_cv_type_socklen_t" "$ac_includes_default"
 if test "x$ac_cv_type_socklen_t" = xyes; then :
 
@@ -5230,9 +5240,10 @@ $as_echo "#define malloc rpl_malloc" >>confdefs.h
 fi
 
 
-for ac_func in atoi bzero close exit free gettimeofday inet_addr \
-                inet_ntoa memcpy pipe printf read select socket sprintf \
-                strchr strcmp strdup strerror strlen write
+for ac_func in addr2ascii atoi bzero close exit free gettimeofday \
+                inet_addr inet_lnaof inet_makeaddr inet_ntoa memcpy \
+                pipe printf read select socket sprintf strchr strcmp \
+                strdup strerror strlen write
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"

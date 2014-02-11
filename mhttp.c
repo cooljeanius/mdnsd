@@ -8,7 +8,7 @@
 #include <strings.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-/* cannot include <arpa/inet.h> because its declaration for inet_ntoa() is incompatible with how it is used here */
+#include <arpa/inet.h> /* for inet_addr(), inet_makeaddr(), and inet_ntoa() */
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -79,8 +79,18 @@ int main(int argc, char *argv[])
     mdnsd d;
     mdnsdr r;
     struct message m;
+#ifdef HAVE_IN_ADDR_T
+    in_addr_t ip;
+#else
     unsigned long int ip;
+#endif /* HAVE_IN_ADDR_T */
+#ifdef HAVE_IN_ADDR_T
+    in_addr_t local_ip;
+#else
+    unsigned long int local_ip;
+#endif /* HAVE_IN_ADDR_T */
     unsigned short int port;
+    struct in_addr my_in_addr_struct;
     struct timeval *tv;
     int bsize, ssize = sizeof(struct sockaddr_in);
     unsigned char buf[MAX_PACKET_LEN];
@@ -91,12 +101,14 @@ int main(int argc, char *argv[])
     int len = 0;
     xht h;
 
-    if(argc < 4) { printf("usage: mhttp 'unique name' 12.34.56.78 80 '/optionalpath'\n"); return; }
+    if(argc < 4) { printf("usage: mhttp 'unique name' 12.34.56.78 80 '/optionalpath'\n"); return 1; }
 
     ip = inet_addr(argv[2]);
+    local_ip = inet_addr("127.0.0.1");
     port = atoi(argv[3]);
-	/* FIXME: fix type for argument to inet_ntoa */
-    printf("Announcing .local site named '%s' to %s:%d and extra path '%s'\n",argv[1],inet_ntoa(ip),port,argv[4]);
+    /* not sure if this will work, as the second argument is made up: */
+    my_in_addr_struct = inet_makeaddr(ip, local_ip);
+    printf("Announcing .local site named '%s' to %s:%d and extra path '%s'\n",argv[1],inet_ntoa(my_in_addr_struct),port,argv[4]);
 
     signal(SIGINT,done);
     signal(SIGHUP,done);

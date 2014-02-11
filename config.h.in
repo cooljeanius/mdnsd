@@ -3,6 +3,9 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
+/* Define to 1 if you have the `addr2ascii' function. */
+#undef HAVE_ADDR2ASCII
+
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 
@@ -33,11 +36,20 @@
 /* Define to 1 if you have the `inet_addr' function. */
 #undef HAVE_INET_ADDR
 
+/* Define to 1 if you have the `inet_lnaof' function. */
+#undef HAVE_INET_LNAOF
+
+/* Define to 1 if you have the `inet_makeaddr' function. */
+#undef HAVE_INET_MAKEADDR
+
 /* Define to 1 if you have the `inet_ntoa' function. */
 #undef HAVE_INET_NTOA
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define to 1 if the system has the type `in_addr_t'. */
+#undef HAVE_IN_ADDR_T
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
