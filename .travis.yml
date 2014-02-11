@@ -1,0 +1,8 @@
+language: C
+
+# try to build
+script: ./configure && make
+
+compiler:
+  - clang
+  - gcc
