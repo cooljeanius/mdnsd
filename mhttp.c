@@ -74,6 +74,7 @@ int msock()
     return s;
 }
 
+/* main function */
 int main(int argc, char *argv[])
 {
     mdnsd d;

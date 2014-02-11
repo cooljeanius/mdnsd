@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+/* cannot include <arpa/inet.h> here because of how inet_ntoa() is used */
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -75,6 +76,7 @@ int msock()
     return s;
 }
 
+/* main function */
 int main(int argc, char *argv[])
 {
     mdnsd d;

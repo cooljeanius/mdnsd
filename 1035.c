@@ -103,8 +103,9 @@ void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
         return;
     }
     /* no cache, so cache it if room */
-    if(x <= 19 && m->_labels[x] == 0)
+    if(x <= 19 && m->_labels[x] == 0) {
         m->_labels[x] = *namep;
+    }
     m->_len += (name - *namep) + 1;
 }
 
@@ -122,8 +123,9 @@ int _lmatch(struct message *m, unsigned char *l1, unsigned char *l2)
 
     /* compare all label characters */
     if(*l1 != *l2) return 0;
-    for(len = 1; len <= *l1; len++)
+    for(len = 1; len <= *l1; len++) {
         if(l1[len] != l2[len]) return 0;
+    }
 
     /* get new labels */
     l1 += *l1 + 1;
@@ -147,12 +149,11 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
     /* make our label */
     while(name[y])
     {
-        if(name[y] == '.')
-        {
+        if(name[y] == '.') {
             if(!name[y+1]) break;
             label[last] = x - (last + 1);
             last = x;
-        }else{
+        } else {
             label[x] = name[y];
         }
         if(x++ == 255) return 0;
@@ -164,11 +165,9 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
     label[x] = 0; /* always terminate w/ a 0 */
 
     /* double-loop checking each label against all m->_labels for match */
-    for(x = 0; label[x]; x += label[x] + 1)
-    {
-        for(y = 0; m->_labels[y]; y++)
-            if(_lmatch(m,label+x,m->_labels[y]))
-            {
+    for(x = 0; label[x]; x += label[x] + 1) {
+        for(y = 0; m->_labels[y]; y++) {
+            if(_lmatch(m,label+x,m->_labels[y])) {
                 /* matching label, set up pointer */
                 l = label + x;
                 short2net(m->_labels[y] - m->_packet, &l);
@@ -176,6 +175,7 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
                 len = x + 2;
                 break;
             }
+        }
         if(label[x] & 0xc0) break;
     }
 
@@ -185,8 +185,7 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
     *bufp += len;
 
     /* for each new label, store its location for future compression */
-    for(x = 0; l[x]; x += l[x] + 1)
-    {
+    for(x = 0; l[x]; x += l[x] + 1) {
         if(l[x] & 0xc0) break;
         if(m->_label + 1 >= 19) break;
         m->_labels[m->_label++] = l + x;
@@ -198,8 +197,7 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
 int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **bufp)
 {
     int i;
-    for(i=0; i < count; i++)
-    {
+    for(i=0; i < count; i++) {
         _label(m, bufp, &(rr[i].name));
         rr[i].type = net2short(bufp);
         rr[i].class = net2short(bufp);
@@ -213,8 +211,7 @@ int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **
         memcpy(rr[i].rdata,*bufp,rr[i].rdlength);
 
         /* parse commonly known ones */
-        switch(rr[i].type)
-        {
+        switch(rr[i].type) {
         case 1:
             if(m->_len + 16 > MAX_PACKET_LEN) return 1;
             rr[i].known.a.name = m->_packet + m->_len;
@@ -252,11 +249,14 @@ void message_parse(struct message *m, unsigned char *packet)
 
     if(packet == 0 || m == 0) return;
 
-    /* keep all our mem in one (aligned) block for easy freeing */
-    #define my(x,y) while(m->_len&7) m->_len++; (void*)x = (void*)(m->_packet + m->_len); m->_len += y;
-	/* newer versions of gcc treat the above as a hard error;
-	 * use an older version of gcc to be able to compile with just warnings
-	 */
+/* number used with __GNUC_MINOR__ is a guess */
+#if defined(__GNUC__) && ((__GNUC__ < 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ < 2)))
+/* keep all our mem in one (aligned) block for easy freeing */
+# define my(x,y) while(m->_len&7) m->_len++; (void*)x = (void*)(m->_packet + m->_len); m->_len += y;
+/* newer versions of gcc treat the above as a hard error; hence the ifdefing. */
+#else
+# define my(x,y) while(m->_len&7) m->_len++; x = (void*)(m->_packet + m->_len); m->_len += y;
+#endif /* GCC version = ? */
 
     /* header stuff bit crap */
     m->_buf = buf = packet;
@@ -280,18 +280,25 @@ void message_parse(struct message *m, unsigned char *packet)
     if(m->_len + (sizeof(struct resource) * m->arcount) > MAX_PACKET_LEN - 8) { m->arcount = 0; return; }
 
     /* process questions */
-    my(m->qd, sizeof(struct question) * m->qdcount);
-    for(i=0; i < m->qdcount; i++)
-    {
+    unsigned int casted_qdcount;
+    casted_qdcount = sizeof(struct question) * m->qdcount;
+    my(m->qd, casted_qdcount);
+    for(i=0; i < m->qdcount; i++) {
         _label(m, &buf, &(m->qd[i].name));
         m->qd[i].type = net2short(&buf);
         m->qd[i].class = net2short(&buf);
     }
 
     /* process rrs */
-    my(m->an, sizeof(struct resource) * m->ancount);
-    my(m->ns, sizeof(struct resource) * m->nscount);
-    my(m->ar, sizeof(struct resource) * m->arcount);
+    unsigned int casted_ancount;
+    casted_ancount = sizeof(struct resource) * m->ancount;
+    my(m->an, casted_ancount);
+    unsigned int casted_nscount;
+    casted_nscount = sizeof(struct resource) * m->nscount;
+    my(m->ns, casted_nscount);
+    unsigned int casted_arcount;
+    casted_arcount = sizeof(struct resource) * m->arcount;
+    my(m->ar, casted_arcount);
     if(_rrparse(m,m->an,m->ancount,&buf)) return;
     if(_rrparse(m,m->ns,m->nscount,&buf)) return;
     if(_rrparse(m,m->ar,m->arcount,&buf)) return;
