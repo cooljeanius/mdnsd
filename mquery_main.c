@@ -10,8 +10,9 @@
 
 #include <errno.h> /* for errno() */
 #include <netinet/in.h> /* for struct sockaddr_in */
-#include <stdio.h> /* for printf(), and strerror() */
+#include <stdio.h> /* for printf(), and also for strerror() on Darwin */
 #include <stdlib.h> /* for atoi() */
+#include <string.h> /* for strerror() on Linux */
 #include <strings.h> /* for bzero() */
 #include <sys/socket.h> /* for recvfrom(), and sendto() */
 #ifdef HAVE_CONFIG_H

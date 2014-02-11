@@ -1,0 +1,4 @@
+AT_INIT([mdnsd_testsuite])
+#TODO: fix the ".." for vpath builds
+AT_TESTED([../mhttp ../mquery])
+#TODO: make mhttp and mquery accept the "--version" command-line flag

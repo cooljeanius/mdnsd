@@ -1,7 +1,7 @@
 language: C
 
 # try to build
-script: ./configure && make
+script: ./configure && make && make check
 
 compiler:
   - clang

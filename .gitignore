@@ -35,4 +35,5 @@ libtool
 *.dylib
 *.la
 *.lai
-
+tests/atconfig
+tests/atlocal

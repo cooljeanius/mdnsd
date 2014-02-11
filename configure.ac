@@ -7,6 +7,7 @@ AC_CONFIG_SRCDIR([1035.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_TESTDIR([tests])
 AC_CANONICAL_TARGET
 AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE([gnu])
@@ -66,5 +67,8 @@ AC_CHECK_FUNCS([addr2ascii atoi bind bzero close exit errno free \
                 sendto setsockopt signal socket sprintf strchr strcmp \
                 strdup strerror strlen time write])
 
-AC_CONFIG_FILES([Makefile Makefile.orig])
+AC_CONFIG_FILES([Makefile \
+                 Makefile.orig \
+                 tests/atlocal \
+                 tests/Makefile])
 AC_OUTPUT

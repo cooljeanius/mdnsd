@@ -2,6 +2,8 @@
 
 ACLOCAL_AMFLAGS = -I m4 --install
 
+SUBDIRS = tests
+
 CC = @CC@
 RM_PROG = @RM_PROG@
 AM_CFLAGS = -g -Wall -Wimplicit -Wno-unused -Wno-pointer-sign
