@@ -135,8 +135,7 @@ int main(int argc, char *argv[])
     mdnsd_set_raw(d,r,packet,len);
     free(packet);
 
-    while(1)
-    {
+    while(1) {
         tv = mdnsd_sleep(d);
         FD_ZERO(&fds);
         FD_SET(_zzz[0],&fds);
@@ -146,8 +145,7 @@ int main(int argc, char *argv[])
         /* only used when we wake-up from a signal, shutting down */
         if(FD_ISSET(_zzz[0],&fds)) read(_zzz[0],buf,MAX_PACKET_LEN);
 
-        if(FD_ISSET(s,&fds))
-        {
+        if(FD_ISSET(s,&fds)) {
             while((bsize = recvfrom(s,buf,MAX_PACKET_LEN,0,(struct sockaddr*)&from,&ssize)) > 0)
             {
                 bzero(&m,sizeof(struct message));
@@ -156,8 +154,7 @@ int main(int argc, char *argv[])
             }
             if(bsize < 0 && errno != EAGAIN) { printf("cannot read from socket %d: %s\n",errno,strerror(errno)); return 1; }
         }
-        while(mdnsd_out(d,&m,&ip,&port))
-        {
+        while(mdnsd_out(d,&m,&ip,&port)) {
             bzero(&to, sizeof(to));
             to.sin_family = AF_INET;
             to.sin_port = port;

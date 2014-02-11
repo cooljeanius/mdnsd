@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-/* cannot include <arpa/inet.h> here because of how inet_ntoa() is used */
+#include <arpa/inet.h> /* for inet_addr(), inet_makeaddr(), and inet_ntoa() */
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -18,18 +18,26 @@
 # define NON_AUTOTOOLS_BUILD_FOR_MQUERY_C 1
 #endif /* HAVE_CONFIG_H */
 
-#include "mdnsd.h"
+#include "mdnsd.h" /* for mdnsda struct */
 
 /* print an answer */
 int ans(mdnsda a, void *arg)
 {
     int now;
+#ifdef HAVE_IN_ADDR_T
+    in_addr_t local_ip;
+#else
+    unsigned long int local_ip;
+#endif /* HAVE_IN_ADDR_T */
+    local_ip = inet_addr("127.0.0.1");
+    struct in_addr my_in_addr_struct;
     if(a->ttl == 0) now = 0;
     else now = a->ttl - time(0);
-    switch(a->type)
-    {
+    /* not sure if this will work, as the second argument is made up: */
+    my_in_addr_struct = inet_makeaddr(a->ip, local_ip);
+    switch(a->type) {
     case QTYPE_A:
-        printf("A %s for %d seconds to ip %s\n",a->name,now,inet_ntoa(a->ip));
+        printf("A %s for %d seconds to ip %s\n",a->name,now,inet_ntoa(my_in_addr_struct));
         break;
     case QTYPE_PTR:
         printf("PTR %s for %d seconds to %s\n",a->name,now,a->rdname);

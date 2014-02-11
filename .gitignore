@@ -25,3 +25,4 @@ cscope.files
 config*.lineno
 *deps/*.*o
 *.tab.c
+*.gch

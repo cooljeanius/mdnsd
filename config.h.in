@@ -227,6 +227,11 @@
 /* Define to 1 if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
 
+/* Define to 1 if type `char' is unsigned and you are not using gcc.  */
+#ifndef __CHAR_UNSIGNED__
+# undef __CHAR_UNSIGNED__
+#endif
+
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES
 

@@ -40,6 +40,7 @@ AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
+AC_C_CHAR_UNSIGNED
 AC_C_PROTOTYPES
 AC_CHECK_TYPES([in_addr_t])
 AC_CHECK_TYPES([socklen_t])
