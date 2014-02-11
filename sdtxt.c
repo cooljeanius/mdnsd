@@ -38,6 +38,7 @@ void _sd2txt_write(xht h, const char *key, void *val, void *arg)
     unsigned char **txtp = (unsigned char **)arg;
     char *cval = (char*)val;
     int len;
+    len = 0;
 
     /* copy in lengths, then strings */
     **txtp = _sd2txt_len(key,(char*)val);

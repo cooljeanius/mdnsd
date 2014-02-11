@@ -15,7 +15,91 @@
      <key>kind</key><string>event</string>
      <key>location</key>
      <dict>
-      <key>line</key><integer>575</integer>
+      <key>line</key><integer>394</integer>
+      <key>col</key><integer>5</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>ranges</key>
+     <array>
+       <array>
+        <dict>
+         <key>line</key><integer>394</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+        <dict>
+         <key>line</key><integer>394</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+       </array>
+     </array>
+     <key>extended_message</key>
+     <string>Value stored to &apos;i&apos; is never read</string>
+     <key>message</key>
+<string>Value stored to &apos;i&apos; is never read</string>
+    </dict>
+   </array>
+   <key>description</key><string>Value stored to &apos;i&apos; is never read</string>
+   <key>category</key><string>Dead store</string>
+   <key>type</key><string>Dead assignment</string>
+  <key>location</key>
+  <dict>
+   <key>line</key><integer>394</integer>
+   <key>col</key><integer>5</integer>
+   <key>file</key><integer>0</integer>
+  </dict>
+  </dict>
+  <dict>
+   <key>path</key>
+   <array>
+    <dict>
+     <key>kind</key><string>event</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>435</integer>
+      <key>col</key><integer>5</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>ranges</key>
+     <array>
+       <array>
+        <dict>
+         <key>line</key><integer>435</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+        <dict>
+         <key>line</key><integer>435</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+       </array>
+     </array>
+     <key>extended_message</key>
+     <string>Value stored to &apos;i&apos; is never read</string>
+     <key>message</key>
+<string>Value stored to &apos;i&apos; is never read</string>
+    </dict>
+   </array>
+   <key>description</key><string>Value stored to &apos;i&apos; is never read</string>
+   <key>category</key><string>Dead store</string>
+   <key>type</key><string>Dead assignment</string>
+  <key>location</key>
+  <dict>
+   <key>line</key><integer>435</integer>
+   <key>col</key><integer>5</integer>
+   <key>file</key><integer>0</integer>
+  </dict>
+  </dict>
+  <dict>
+   <key>path</key>
+   <array>
+    <dict>
+     <key>kind</key><string>event</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>578</integer>
       <key>col</key><integer>37</integer>
       <key>file</key><integer>0</integer>
      </dict>
@@ -23,12 +107,12 @@
      <array>
        <array>
         <dict>
-         <key>line</key><integer>575</integer>
+         <key>line</key><integer>578</integer>
          <key>col</key><integer>44</integer>
          <key>file</key><integer>0</integer>
         </dict>
         <dict>
-         <key>line</key><integer>575</integer>
+         <key>line</key><integer>578</integer>
          <key>col</key><integer>44</integer>
          <key>file</key><integer>0</integer>
         </dict>
@@ -45,7 +129,7 @@
    <key>type</key><string>Dead assignment</string>
   <key>location</key>
   <dict>
-   <key>line</key><integer>575</integer>
+   <key>line</key><integer>578</integer>
    <key>col</key><integer>37</integer>
    <key>file</key><integer>0</integer>
   </dict>

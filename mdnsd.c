@@ -86,11 +86,11 @@ int _namehash(const char *s)
     const unsigned char *name = (const unsigned char *)s;
     unsigned long h = 0, g;
 
-    while (*name)
-    { /* do some fancy bitwanking on the string */
+    while (*name) { /* do some fancy bitwanking on the string */
         h = (h << 4) + (unsigned long)(*name++);
-        if ((g = (h & 0xF0000000UL))!=0)
+        if ((g = (h & 0xF0000000UL))!=0) {
             h ^= (g >> 24);
+        }
         h &= ~g;
     }
 
@@ -102,27 +102,33 @@ struct query *_q_next(mdnsd d, struct query *q, char *host, int type)
 {
     if(q == 0) q = d->queries[_namehash(host) % SPRIME];
     else q = q->next;
-    for(;q != 0; q = q->next)
-        if(q->type == type && strcmp(q->name, host) == 0)
+    for(;q != 0; q = q->next) {
+        if(q->type == type && strcmp(q->name, host) == 0) {
             return q;
+        }
+    }
     return 0;
 }
 struct cached *_c_next(mdnsd d, struct cached *c, char *host, int type)
 {
     if(c == 0) c = d->cache[_namehash(host) % LPRIME];
     else c = c->next;
-    for(;c != 0; c = c->next)
-        if((type == c->rr.type || type == 255) && strcmp(c->rr.name, host) == 0)
+    for(;c != 0; c = c->next) {
+        if((type == c->rr.type || type == 255) && strcmp(c->rr.name, host) == 0) {
             return c;
+        }
+    }
     return 0;
 }
 mdnsdr _r_next(mdnsd d, mdnsdr r, char *host, int type)
 {
     if(r == 0) r = d->published[_namehash(host) % SPRIME];
     else r = r->next;
-    for(;r != 0; r = r->next)
-        if(type == r->rr.type && strcmp(r->rr.name, host) == 0)
+    for(;r != 0; r = r->next) {
+        if(type == r->rr.type && strcmp(r->rr.name, host) == 0) {
             return r;
+        }
+    }
     return 0;
 }
 
@@ -157,8 +163,9 @@ int _tvdiff(struct timeval old, struct timeval new)
 void _r_push(mdnsdr *list, mdnsdr r)
 {
     mdnsdr cur;
-    for(cur = *list; cur != 0; cur = cur->list)
+    for(cur = *list; cur != 0; cur = cur->list) {
         if(cur == r) return;
+    }
     r->list = *list;
     *list = r;
 }
@@ -166,6 +173,7 @@ void _r_push(mdnsdr *list, mdnsdr r)
 /* set this r to probing, set next probe time */
 void _r_probe(mdnsd d, mdnsdr r)
 {
+	/* TODO: put something here */
 }
 
 /* force any r out right away, if valid */
@@ -180,13 +188,11 @@ void _r_publish(mdnsd d, mdnsdr r)
 /* send r out asap */
 void _r_send(mdnsd d, mdnsdr r)
 {
-    if(r->tries < 4)
-    { /* being published, make sure that happens soon */
+    if(r->tries < 4) { /* being published, make sure that happens soon */
         d->publish.tv_sec = d->now.tv_sec; d->publish.tv_usec = d->now.tv_usec;
         return;
     }
-    if(r->unique)
-    { /* known unique ones can be sent asap */
+    if(r->unique) { /* known unique ones can be sent asap */
         _r_push(&d->a_now,r);
         return;
     }
@@ -215,9 +221,10 @@ void _q_reset(mdnsd d, struct query *q)
     struct cached *cur = 0;
     q->nexttry = 0;
     q->tries = 0;
-    while((cur = _c_next(d,cur,q->name,q->type)))
+    while((cur = _c_next(d,cur,q->name,q->type))) {
 	/* used extra parentheses to silence above warning; it might have been better to turn the "=" into a "==" though */
         if(q->nexttry == 0 || cur->rr.ttl - 7 < q->nexttry) q->nexttry = cur->rr.ttl - 7;
+    }
     if(q->nexttry != 0 && q->nexttry < d->checkqlist) d->checkqlist = q->nexttry;
 }
 
@@ -272,11 +279,9 @@ void _conflict(mdnsd d, mdnsdr r)
 void _c_expire(mdnsd d, struct cached **list)
 { /* expire any old entries in this list */
     struct cached *next, *cur = *list, *last = 0;
-    while(cur != 0)
-    {
+    while(cur != 0) {
         next = cur->next;
-        if(d->now.tv_sec >= cur->rr.ttl)
-        {
+        if(d->now.tv_sec >= cur->rr.ttl) {
             if(last) last->next = next;
             if(*list == cur) *list = next; /* update list ptr if 1st 1 expd */
             if(cur->q) _q_answer(d,cur);
@@ -284,7 +289,7 @@ void _c_expire(mdnsd d, struct cached **list)
             free(cur->rr.rdata);
             free(cur->rr.rdname);
             free(cur);
-        }else{
+        } else {
             last = cur;
         }
         cur = next;
@@ -295,8 +300,9 @@ void _c_expire(mdnsd d, struct cached **list)
 void _gc(mdnsd d)
 {
     int i;
-    for(i=0;i<LPRIME;i++)
+    for(i=0;i<LPRIME;i++) {
         if(d->cache[i]) _c_expire(d,&d->cache[i]);
+    }
     d->expireall = d->now.tv_sec + GC;
 }
 
@@ -305,22 +311,20 @@ void _cache(mdnsd d, struct resource *r)
     struct cached *c = 0;
     int i = _namehash(r->name) % LPRIME;
 
-    if(r->class == 32768 + d->class)
-    { /* cache flush */
+    if(r->class == 32768 + d->class) { /* cache flush */
         while((c = _c_next(d,c,r->name,r->type))) c->rr.ttl = 0;
 		/* used extra parentheses to silence above warning; it might have been better to turn the "=" into a "==" though */
         _c_expire(d,&d->cache[i]);
     }
 
-    if(r->ttl == 0)
-    { /* process deletes */
-        while((c = _c_next(d,c,r->name,r->type)))
+    if(r->ttl == 0) { /* process deletes */
+        while((c = _c_next(d,c,r->name,r->type))) {
 		/* used extra parentheses to silence above warning; it might have been better to turn the "=" into a "==" though */
-            if(_a_match(r,&c->rr))
-            {
+            if(_a_match(r,&c->rr)) {
                 c->rr.ttl = 0;
                 _c_expire(d,&d->cache[i]);
             }
+        }
         return;
     }
 
@@ -332,8 +336,7 @@ void _cache(mdnsd d, struct resource *r)
     c->rr.rdlen = r->rdlength;
     c->rr.rdata = (unsigned char *)malloc(r->rdlength);
     memcpy(c->rr.rdata,r->rdata,r->rdlength);
-    switch(r->type)
-    {
+    switch(r->type) {
     case QTYPE_A:
         c->rr.ip = r->known.a.ip;
         break;
@@ -351,9 +354,10 @@ void _cache(mdnsd d, struct resource *r)
     }
     c->next = d->cache[i];
     d->cache[i] = c;
-    if((c->q = _q_next(d, 0, r->name, r->type)))
+    if((c->q = _q_next(d, 0, r->name, r->type))) {
 	/* used extra parentheses to silence above warning; it might have been better to turn the "=" into a "==" though */
         _q_answer(d,c);
+    }
 }
 
 void _a_copy(struct message *m, mdnsda a)
@@ -366,16 +370,17 @@ void _a_copy(struct message *m, mdnsda a)
 
 int _r_out(mdnsd d, struct message *m, mdnsdr *list)
 { /* copy a published record into an outgoing message */
-    mdnsdr r, next;
+    mdnsdr r, next; /* unused (?) */
     int ret = 0;
     while((r = *list) != 0 && message_packet_len(m) + _rr_len(&r->rr) < d->frame)
     {
         *list = r->list;
         ret++;
-        if(r->unique)
+        if(r->unique) {
             message_an(m, r->rr.name, r->rr.type, d->class + 32768, r->rr.ttl);
-        else
+        } else {
             message_an(m, r->rr.name, r->rr.type, d->class, r->rr.ttl);
+        }
         _a_copy(m, &r->rr);
         if(r->rr.ttl == 0) _r_done(d,r);
     }
@@ -386,6 +391,7 @@ int _r_out(mdnsd d, struct message *m, mdnsdr *list)
 mdnsd mdnsd_new(int class, int frame)
 {
     int i;
+    i = 0;
     mdnsd d;
     d = (mdnsd)malloc(sizeof(struct mdnsd_struct));
     bzero(d,sizeof(struct mdnsd_struct));
@@ -401,15 +407,15 @@ void mdnsd_shutdown(mdnsd d)
     int i;
     mdnsdr cur,next;
     d->a_now = 0;
-    for(i=0;i<SPRIME;i++)
-        for(cur = d->published[i]; cur != 0;)
-        {
+    for(i=0;i<SPRIME;i++) {
+        for(cur = d->published[i]; cur != 0;) {
             next = cur->next;
             cur->rr.ttl = 0;
             cur->list = d->a_now;
             d->a_now = cur;
             cur = next;
         }
+    }
     d->shutdown = 1;
 }
 
@@ -426,6 +432,7 @@ void mdnsd_flush(mdnsd d)
 void mdnsd_free(mdnsd d)
 {
     int i;
+    i = 0;
     /* loop through all hashes, free everything */
 	/* free answers if any */
     free(d);
@@ -440,8 +447,7 @@ void mdnsd_in(mdnsd d, struct message *m, unsigned long int ip, unsigned short i
 
     gettimeofday(&d->now,0);
 
-    if(m->header.qr == 0)
-    {
+    if(m->header.qr == 0) {
         for(i=0;i<m->qdcount;i++)
         { /* process each query */
             if(m->qd[i].class != d->class || (r = _r_next(d,0,m->qd[i].name,m->qd[i].type)) == 0) continue;
@@ -512,17 +518,16 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
     if(d->a_publish && _tvdiff(d->now,d->publish) <= 0)
     { /* check to see if it is time to send the publish retries (unlink if done) */
         mdnsdr next, cur = d->a_publish, last = 0;
-        while(cur && message_packet_len(m) + _rr_len(&cur->rr) < d->frame)
-        {
+        while(cur && message_packet_len(m) + _rr_len(&cur->rr) < d->frame) {
             next = cur->list;
             ret++; cur->tries++;
-            if(cur->unique)
+            if(cur->unique) {
                 message_an(m, cur->rr.name, cur->rr.type, d->class + 32768, cur->rr.ttl);
-            else
+            } else {
                 message_an(m, cur->rr.name, cur->rr.type, d->class, cur->rr.ttl);
+            }
             _a_copy(m, &cur->rr);
-            if(cur->rr.ttl != 0 && cur->tries < 4)
-            {
+            if(cur->rr.ttl != 0 && cur->tries < 4) {
                 last = cur;
                 cur = next;
                 continue;
@@ -532,8 +537,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
             if(cur->rr.ttl == 0) _r_done(d,cur);
             cur = next;
         }
-        if(d->a_publish)
-        {
+        if(d->a_publish) {
             d->publish.tv_sec = d->now.tv_sec + 2;
             d->publish.tv_usec = d->now.tv_usec;
         }
@@ -550,18 +554,17 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
     m->header.qr = 0;
     m->header.aa = 0;
 
-    if(d->probing && _tvdiff(d->now,d->probe) <= 0)
-    {
+    if(d->probing && _tvdiff(d->now,d->probe) <= 0) {
         mdnsdr last = 0;
         for(r = d->probing; r != 0;)
         { /* scan probe list to ask questions and process published */
-            if(r->unique == 4)
-            { /* done probing, publish */
+            if(r->unique == 4) { /* done probing, publish */
                 mdnsdr next = r->list;
-                if(d->probing == r)
+                if(d->probing == r) {
                     d->probing = r->list;
-                else
+                } else {
                     last->list = r->list;
+                }
                 r->list = 0;
                 r->unique = 5;
                 _r_publish(d,r);
@@ -579,8 +582,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
             _a_copy(m, &r->rr);
             ret++;
         }
-        if(ret)
-        { /* process probes again in the future */
+        if(ret) { /* process probes again in the future */
             d->probe.tv_sec = d->now.tv_sec;
             d->probe.tv_usec = d->now.tv_usec + 250000;
             return ret;
@@ -594,26 +596,28 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
         unsigned long int nextbest = 0;
 
         /* ask questions first, track next-best time */
-        for(q = d->qlist; q != 0; q = q->list)
-            if(q->nexttry > 0 && q->nexttry <= d->now.tv_sec && q->tries < 3)
+        for(q = d->qlist; q != 0; q = q->list) {
+            if(q->nexttry > 0 && q->nexttry <= d->now.tv_sec && q->tries < 3) {
                 message_qd(m,q->name,q->type,d->class);
-            else if(q->nexttry > 0 && (nextbest == 0 || q->nexttry < nextbest))
+            } else if(q->nexttry > 0 && (nextbest == 0 || q->nexttry < nextbest)) {
                 nextbest = q->nexttry;
+            }
+        }
 
         /* include known answers, update questions */
         for(q = d->qlist; q != 0; q = q->list)
         {
             if(q->nexttry == 0 || q->nexttry > d->now.tv_sec) continue;
-            if(q->tries == 3)
-            { /* done retrying, expire and reset */
+            if(q->tries == 3) { /* done retrying, expire and reset */
                 _c_expire(d,&d->cache[_namehash(q->name) % LPRIME]);
                 _q_reset(d,q);
                 continue;
             }
             ret++;
             q->nexttry = d->now.tv_sec + ++q->tries;
-            if(nextbest == 0 || q->nexttry < nextbest)
+            if(nextbest == 0 || q->nexttry < nextbest) {
                 nextbest = q->nexttry;
+            }
             /* if room, add all known good entries */
             c = 0;
             while((c = _c_next(d,c,q->name,q->type)) != 0 && c->rr.ttl > d->now.tv_sec + 8 && message_packet_len(m) + _rr_len(&c->rr) < d->frame)
@@ -625,8 +629,9 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
         d->checkqlist = nextbest;
     }
 
-    if(d->now.tv_sec > d->expireall)
+    if(d->now.tv_sec > d->expireall) {
         _gc(d);
+    }
 
     return ret;
 }
@@ -634,7 +639,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
 struct timeval *mdnsd_sleep(mdnsd d)
 {
     int sec, usec;
-    mdnsdr r;
+    mdnsdr r; /* unused (?) */
     d->sleep.tv_sec = d->sleep.tv_usec = 0;
     #define RET while(d->sleep.tv_usec > 1000000) {d->sleep.tv_sec++;d->sleep.tv_usec -= 1000000;} return &d->sleep;
 
@@ -687,14 +692,14 @@ void mdnsd_query(mdnsd d, char *host, int type, int (*answer)(mdnsda a, void *ar
         q->next = d->queries[i];
         q->list = d->qlist;
         d->qlist = d->queries[i] = q;
-        while((cur = _c_next(d,cur,q->name,q->type)))
+        while((cur = _c_next(d,cur,q->name,q->type))) {
 		/* used extra parentheses to silence above warning; it might have been better to turn the "=" into a "==" though */
             cur->q = q; /* any cached entries should be associated */
+        }
         _q_reset(d,q);
         q->nexttry = d->checkqlist = d->now.tv_sec; /* new question, immediately send out */
     }
-    if(!answer)
-    { /* no answer means we do NOT care anymore */
+    if(!answer) { /* no answer means we do NOT care anymore */
         _q_done(d,q);
         return;
     }
@@ -737,8 +742,7 @@ mdnsdr mdnsd_unique(mdnsd d, char *host, int type, long int ttl, void (*conflict
 void mdnsd_done(mdnsd d, mdnsdr r)
 {
     mdnsdr cur;
-    if(r->unique && r->unique < 5)
-    { /* probing yet, zap from that list 1st! */
+    if(r->unique && r->unique < 5) { /* probing yet, zap from that list 1st! */
         if(d->probing == r) d->probing = r->list;
         else {
             for(cur=d->probing;cur->list != r;cur = cur->list);
