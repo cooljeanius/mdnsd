@@ -8,6 +8,8 @@
 #include <string.h>
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_1035_C 1
 #endif /* HAVE_CONFIG_H */
 
 unsigned short int net2short(unsigned char **bufp)
@@ -76,8 +78,9 @@ void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
     for(label = *bufp; *label != 0; name += *label + 1, label += *label + 1)
     {
         /* skip past any compression pointers, kick out if end encountered (bad data prolly) */
-        while(*label & 0xc0)
+        while(*label & 0xc0) {
             if(*(label = m->_buf + _ldecomp(label)) == 0) break;
+		}
 
         /* make sure we are/were not over the limits */
         if((name + *label) - *namep > 255 || m->_len + ((name + *label) - *namep) > 4096) return;

@@ -10,6 +10,8 @@
 #include <netinet/in.h>
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_MDNSD_C 1
 #endif /* HAVE_CONFIG_H */
 
 /* size of query/publish hashes */
@@ -220,7 +222,7 @@ void _q_reset(mdnsd d, struct query *q)
 }
 
 void _q_done(mdnsd d, struct query *q)
-{ /* no more query, update all it's cached entries, remove from lists */
+{ /* no more query, update all its cached entries, remove from lists */
     struct cached *c = 0;
     struct query *cur;
     int i = _namehash(q->name) % LPRIME;
@@ -508,7 +510,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
     if(d->a_now) ret += _r_out(d, m, &d->a_now);
 
     if(d->a_publish && _tvdiff(d->now,d->publish) <= 0)
-    { /* check to see if it's time to send the publish retries (and unlink if done) */
+    { /* check to see if it is time to send the publish retries (unlink if done) */
         mdnsdr next, cur = d->a_publish, last = 0;
         while(cur && message_packet_len(m) + _rr_len(&cur->rr) < d->frame)
         {

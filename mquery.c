@@ -13,6 +13,8 @@
 #include <unistd.h>
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_MQUERY_C 1
 #endif /* HAVE_CONFIG_H */
 
 #include "mdnsd.h"
@@ -116,7 +118,7 @@ int main(int argc, char *argv[])
             to.sin_family = AF_INET;
             to.sin_port = port;
             to.sin_addr.s_addr = ip;
-            if(sendto(s,message_packet(&m),message_packet_len(&m),0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(&m))  { printf("can't write to socket: %s\n",strerror(errno)); return 1; }
+            if(sendto(s,message_packet(&m),message_packet_len(&m),0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(&m))  { printf("cannot write to socket: %s\n",strerror(errno)); return 1; }
         }
     }
 

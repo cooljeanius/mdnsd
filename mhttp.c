@@ -8,6 +8,7 @@
 #include <strings.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+/* cannot include <arpa/inet.h> because its declaration for inet_ntoa() is incompatible with how it is used here */
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -15,6 +16,8 @@
 #include <unistd.h>
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_MHTTP_C 1
 #endif /* HAVE_CONFIG_H */
 
 #include "mdnsd.h"
@@ -92,6 +95,7 @@ int main(int argc, char *argv[])
 
     ip = inet_addr(argv[2]);
     port = atoi(argv[3]);
+	/* FIXME: fix type for argument to inet_ntoa */
     printf("Announcing .local site named '%s' to %s:%d and extra path '%s'\n",argv[1],inet_ntoa(ip),port,argv[4]);
 
     signal(SIGINT,done);

@@ -8,7 +8,7 @@
 /* be familiar w/rfc1035 if you want to know what all the variable names mean,
  * but this hides most of the dirty work
  * all of this code depends on the buffer space a packet is in being 4096 and
- * zero'd before the packet is copied in
+ * zeroed before the packet is copied in
  * also conveniently decodes srv rr's, type 33, see rfc2782
  */
 
@@ -69,7 +69,7 @@ void short2net(unsigned short int i, unsigned char **buf);
 void long2net(unsigned long int l, unsigned char **buf);
 
 /* parse packet into message, packet must be at least MAX_PACKET_LEN and message
- * must be zero'd for safety */
+ * must be zeroed for safety */
 void message_parse(struct message *m, unsigned char *packet);
 
 /* create a message for sending out on the wire */

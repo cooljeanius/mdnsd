@@ -1,6 +1,6 @@
 CC = @CC@
 RM_PROG = @RM_PROG@
-AM_CFLAGS = -g
+AM_CFLAGS = -g -Wall -pedantic -Wextra -Wimplicit
 EXEEXT = @EXEEXT@
 
 all: mquery$(EXEEXT) mhttp$(EXEEXT)

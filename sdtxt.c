@@ -5,6 +5,8 @@
 #include "sdtxt.h"
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_SDTXT_C 1
 #endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>

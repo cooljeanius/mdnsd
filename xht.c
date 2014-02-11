@@ -8,6 +8,8 @@
 #include <string.h>
 #ifdef HAVE_CONFIG_H
 # include "config.h"
+#else
+# define NON_AUTOTOOLS_BUILD_FOR_XHT_C 1
 #endif /* HAVE_CONFIG_H */
 
 typedef struct xhn_struct
