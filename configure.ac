@@ -6,6 +6,7 @@ AC_INIT([mdnsd],[0.7J],[jer@jabber.org])
 AC_CONFIG_SRCDIR([1035.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE([gnu])
@@ -32,6 +33,10 @@ AC_PROG_RANLIB
 AC_PATH_PROG([RM_PROG],[rm])
 AC_SUBST([RM_PROG])
 
+# all right, let us try using libtool
+LT_INIT([win32-dll])
+LT_LANG([C])
+
 # Checks for header files.
 AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
   AC_REQUIRE([AC_PROG_CPP])
@@ -53,10 +58,10 @@ AC_CHECK_TYPES([socklen_t])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([addr2ascii atoi bzero close exit free gettimeofday \
-                inet_addr inet_lnaof inet_makeaddr inet_ntoa memcpy \
-                pipe printf read select socket sprintf strchr strcmp \
-                strdup strerror strlen time write])
+AC_CHECK_FUNCS([addr2ascii atoi bind bzero close exit free gettimeofday \
+                htonl htons inet_addr inet_lnaof inet_makeaddr inet_ntoa \
+                memcpy pipe printf read select setsockopt socket sprintf \
+                strchr strcmp strdup strerror strlen time write])
 
 AC_CONFIG_FILES([Makefile Makefile.orig])
 AC_OUTPUT

@@ -1,3 +1,7 @@
+# Automake Makefile for mdnsd
+
+ACLOCAL_AMFLAGS = -I m4 --install
+
 CC = @CC@
 RM_PROG = @RM_PROG@
 AM_CFLAGS = -g -Wall -Wimplicit -Wno-unused -Wno-pointer-sign
@@ -6,21 +10,14 @@ EXEEXT = @EXEEXT@
 all: mquery$(EXEEXT) mhttp$(EXEEXT)
 
 bin_PROGRAMS = mhttp mquery
-mhttp_SOURCES = mhttp.c mdnsd.c 1035.c sdtxt.c xht.c
-mquery_SOURCES = mquery.c mdnsd.c 1035.c
-noinst_LIBRARIES = libmdnsdcommon.a
-libmdnsdcommon_a_SOURCES = mdnsd.c 1035.c
-lib_LIBRARIES = libmdnsd.a
-libmdnsd_a_SOURCES = 1035.c mdnsd.c mhttp.c mquery.c sdtxt.c xht.c
-include_HEADERS = 1035.h mdnsd.h sdtxt.h xht.h
+mhttp_SOURCES = mhttp.c msock.c mdnsd.c 1035.c sdtxt.c xht.c
+mhttp_CFLAGS = $(AM_CFLAGS)
+mquery_SOURCES = mquery.c msock.c mdnsd.c 1035.c
+mquery_CFLAGS = $(AM_CFLAGS)
 
-my_mhttp$(EXEEXT): mhttp.c mdnsd.c 1035.c sdtxt.c xht.c
-	$(CC) $(CFLAGS) $(AM_CFLAGS) -o mhttp$(EXEEXT) mhttp.c mdnsd.c 1035.c sdtxt.c xht.c
-.PHONY: my_mhttp$(EXEEXT)
-
-my_mquery$(EXEEXT): mquery.c mdnsd.c 1035.c
-	$(CC) $(CFLAGS) $(AM_CFLAGS) -o mquery$(EXEEXT) mquery.c mdnsd.c 1035.c
-.PHONY: my_mquery$(EXEEXT)
+lib_LTLIBRARIES = libmdnsd.la
+libmdnsd_la_SOURCES = 1035.c mdnsd.c mhttp.c mquery.c msock.c sdtxt.c xht.c
+include_HEADERS = 1035.h mdnsd.h msock.h sdtxt.h xht.h
 
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)

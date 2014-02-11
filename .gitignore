@@ -1,6 +1,7 @@
 *DS_Store*
 *~
 *.o
+*.lo
 *.dSYM
 *.status
 *.cache
@@ -29,3 +30,5 @@ conf*/*.awk
 *.gch
 *(Autosaved)*
 lib*.a
+libtool
+
