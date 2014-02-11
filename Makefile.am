@@ -29,3 +29,20 @@ clean-local:
 CLEANFILES = *~ core
 
 DISTCLEANFILES = autoscan.log
+
+PHONY: update-ChangeLog
+update-ChangeLog:
+	    if test -d $(srcdir)/.git; then                         \
+	       $(srcdir)/build-aux/gitlog-to-changelog              \
+	          --format='%s%n%n%b%n' --no-cluster                \
+	          --strip-tab --strip-cherry-pick                   \
+	          -- $$(cat $(srcdir)/.last-cl-gen)..               \
+	        >ChangeLog.tmp                                      \
+	      && git rev-list -n 1 HEAD >.last-cl-gen.tmp           \
+	      && (echo; cat $(srcdir)/ChangeLog) >>ChangeLog.tmp    \
+	      && mv -f ChangeLog.tmp $(srcdir)/ChangeLog            \
+	      && mv -f .last-cl-gen.tmp $(srcdir)/.last-cl-gen      \
+	      && rm -f ChangeLog.tmp;                               \
+	    fi
+
+EXTRA_DIST = .last-cl-gen

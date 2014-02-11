@@ -1,1 +1,112 @@
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	add a little more to the testsuite
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	stub in a testsuite
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	minor configury tweaks
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	split out main functions of mquery and mhttp
+
+	this way a shared library build can work
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	try using libtool
+
+	also split out msock() function into a separate file
+	(This build will most likely fail, as I have not split out the main()
+	functions in mhttp.c and mquery.c yet)
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	build some static libraries
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	deal with warning reported by Travis
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	turn on travis
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	minor distcleaning tweak
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	silence some more warnings
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	use inet_*() functions correctly in mquery.c
+
+	also do some static analysis with clang
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	switch to gnu strictness for automake
+
+	cannot switch to gnits strictness because I want to keep the letter in
+	the version number
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	fix some more warnings
+
+	finally got rid of that lvalue one!
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	fix usage of inet_*() functions in mhttp.c
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	move autotools stuff to a subdirectory
+
+2013-11-20  Eric Gallager  <egallager@comcast.net>
+
+	minor gitignore update
+
+2013-11-20  Eric Gallager  <egallager@comcast.net>
+
+	make distclean
+
+	this removes files that should be gitignored
+
+2013-11-20  Eric Gallager  <egallager@comcast.net>
+
+	multiple small changes
+
+	- gitignore more files
+	- make code conform to my personal standards
+	- add more missing includes to deal with implicit function declaration
+	warnings
+	- actually use automake
+	- update configure script
+	- regenerate build system
+
+2013-02-24  System Administrator  <root@gl00b05046.cats.gwu.edu>
+
+	add more includes and checks
+
+2013-02-24  System Administrator  <root@gl00b05046.cats.gwu.edu>
+
+	#include <stdio.h> in some files
+
+2013-02-24  System Administrator  <root@gl00b05046.cats.gwu.edu>
+
+	whitespace
+
+2013-02-24  System Administrator  <root@gl00b05046.cats.gwu.edu>
+
+	Initial commit
+
 Sun Feb 24 07:09:29 EST 2013

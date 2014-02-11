@@ -1,1 +1,8 @@
-Sun Feb 24 07:09:24 EST 2013
+Version 0.8.0: Now mdnsd builds a library in addition to the programs that
+               it comes with. The programs that it includes now link
+               against this library instead of putting the same object
+               files in each program. This release also includes the
+               beginnings of testsuite and includes many bug fixes.
+
+Sun Feb 24 07:09:24 EST 2013: this file created
+
