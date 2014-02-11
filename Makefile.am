@@ -23,3 +23,5 @@ clean-local:
 	$(RM_PROG) -rf *.dSYM *.cache
 
 CLEANFILES = *~ core
+
+DISTCLEANFILES = autoscan.log
