@@ -57,7 +57,21 @@ AC_C_CHAR_UNSIGNED
 AC_C_CONST
 AC_C_PROTOTYPES
 AC_CHECK_TYPES([in_addr_t])
-AC_CHECK_TYPES([socklen_t])
+AC_CHECK_TYPES([socklen_t],[],[
+  unset ac_cv_type_socklen_t
+  AC_CHECK_TYPES([socklen_t],[],[],[
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#else
+# warning this conftest expects <sys/types.h> to be included.
+#endif /* HAVE_SYS_TYPES_H */
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#else
+# warning this conftest expects <sys/socket.h> to be included.
+#endif /* HAVE_SYS_SOCKET_H */
+  ])
+])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
