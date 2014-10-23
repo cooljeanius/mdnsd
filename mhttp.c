@@ -21,6 +21,7 @@
 #endif /* HAVE_CONFIG_H */
 
 #include "mdnsd.h"
+#include "mhttp.h" /* for functions from this file */
 #include "msock.h" /* for msock() */
 #include "sdtxt.h"
 

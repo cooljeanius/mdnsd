@@ -30,7 +30,7 @@ struct xht_struct
  * This function uses the ELF hashing algorithm as reprinted in
  * Andrew Binstock, "Hashing Rehashed," Dr. Dobb's Journal, April 1996.
  */
-int _xhter(const char *s)
+static int _xhter(const char *s)
 {
     /* ELF hash uses unsigned chars and unsigned arithmetic for portability */
     const unsigned char *name = (const unsigned char *)s;
@@ -50,7 +50,7 @@ int _xhter(const char *s)
 }
 
 
-xhn _xht_node_find(xhn n, const char *key)
+static xhn _xht_node_find(xhn n, const char *key)
 {
     int i;
     for (i = 0; n != 0; n = n->next) {
@@ -78,7 +78,7 @@ xht xht_new(int prime)
 }
 
 /* does the set work, used by the xht_set() and xht_store() functions: */
-xhn _xht_set(xht h, const char *key, void *val, char flag)
+static xhn _xht_set(xht h, const char *key, void *val, char flag)
 {
     int i;
     xhn n;
@@ -98,7 +98,13 @@ xhn _xht_set(xht h, const char *key, void *val, char flag)
     /* if none, make a new one, link into this index: */
     if (n == 0) {
         n = (xhn)malloc(sizeof(struct xhn_struct));
-        n->next = h->zen[i].next;
+        /* Try to avoid a clang static analyzer warning about a null
+         * pointer dereference (FIXME): */
+        if (h->zen[i].next != NULL) {
+            n->next = h->zen[i].next; /* what we had originally */
+        } else {
+            n->next = NULL; /* pretty much the same thing */
+        }
         h->zen[i].next = n;
     }
 
@@ -138,6 +144,11 @@ void xht_store(xht h, const char *key, int klen, void *val, int vlen)
     memcpy(cval, val, vlen);
     cval[vlen] = '\0'; /* convenience, in case it was a string too */
     _xht_set(h, ckey, cval, 1);
+    /* avoid a clang static analyzer warning about a memory leak: */
+    if (ckey) {
+        free((void *)ckey);
+    }
+    return;
 }
 
 

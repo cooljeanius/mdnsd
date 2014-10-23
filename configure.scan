@@ -27,5 +27,6 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h netinet/in.h stdlib.h string.h strings.h s
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([bzero gettimeofday inet_ntoa select socket strchr strdup strerror])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 tests/Makefile])
 AC_OUTPUT

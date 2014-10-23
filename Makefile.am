@@ -6,8 +6,22 @@ SUBDIRS = tests
 
 CC = @CC@
 RM_PROG = @RM_PROG@
-AM_CFLAGS = -g -Wall -Wimplicit -Wno-unused -Wno-pointer-sign
+AM_CFLAGS = -g -O1 -Wall -Wextra -Wimplicit -Wformat=2 -Wswitch \
+	-Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition \
+	-Wuninitialized -Winit-self -Wparentheses -Wwrite-strings \
+	-fstack-protector -Wstack-protector \
+	-fstrict-aliasing -Wstrict-aliasing \
+	-std=gnu99 \
+	-Wno-unused -Wno-unused-parameter \
+	-Wno-pointer-sign -Wno-sign-compare
 EXEEXT = @EXEEXT@
+
+CLANG_ANALYZER = @CLANG_ANALYZER@
+RUN_CLANG_ANALYZER = $(CLANG_ANALYZER) $(DEFS) $(DEFAULT_INCLUDES) \
+	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) \
+	--analyze
+
+analysisdir = $(builddir)/clang_static_analysis
 
 all: mquery$(EXEEXT) mhttp$(EXEEXT)
 
@@ -21,6 +35,14 @@ lib_LTLIBRARIES = libmdnsd.la
 libmdnsd_la_SOURCES = 1035.c mdnsd.c mhttp.c mquery.c msock.c sdtxt.c xht.c
 include_HEADERS = 1035.h mdnsd.h mhttp.h mquery.h msock.h sdtxt.h xht.h
 
+ALL_PLISTS = 1035.plist mdnsd.plist mhttp_main.plist mhttp.plist \
+	mquery_main.plist mquery.plist msock.plist sdtxt.plist xht.plist
+
+SUFFIXES = .c .o .plist
+
+.c.plist:
+	$(RUN_CLANG_ANALYZER) -o $(analysisdir)/$@ $< 
+
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
 	$(RM_PROG) -f *.o *~
@@ -28,7 +50,7 @@ clean-local:
 
 CLEANFILES = *~ core
 
-DISTCLEANFILES = .DS_Store autoscan.log
+DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log
 
 MAINTAINERCLEANFILES = configure.scan
 
@@ -56,3 +78,8 @@ EXTRA_DIST = .last-cl-gen
 
 dist-hook: @MAINT@ update-ChangeLog
 	ls
+
+## using a dependency could go wrong, so call them as part of the rule
+## instead:
+check-local:
+	$(MAKE) $(ALL_PLISTS)

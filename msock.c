@@ -18,8 +18,8 @@
 /* this function was the same in both mhttp.c and mquery.c */
 /* split into separate file to reduce code duplication */
 
-/* create multicast 224.0.0.251:5353 socket */
-int msock()
+/* create multicast 224.0.0.251:5353 socket: */
+int msock(void)
 {
     int s, flag = 1, ittl = 255;
     struct sockaddr_in in;

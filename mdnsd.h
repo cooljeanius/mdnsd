@@ -9,7 +9,7 @@
 
 typedef struct mdnsd_struct *mdnsd; /* main daemon data */
 typedef struct mdnsdr_struct *mdnsdr; /* record entry */
-/* answer data */
+/* answer data: */
 typedef struct mdnsda_struct
 {
     unsigned char *name;
@@ -91,7 +91,7 @@ mdnsdr mdnsd_unique(mdnsd d, char *host, int type, long int ttl, void (*conflict
 /*
  * create a new shared record
  */
-mdnsdr mdnsd_shared(mdnsd d, char *host, int type, long int ttl);
+mdnsdr mdnsd_shared(mdnsd d, const char *host, int type, long int ttl);
 /*
  * de-list the given record
  */

@@ -56,7 +56,7 @@ void long2net(unsigned long int l, unsigned char **bufp)
     *bufp += 4;
 }
 
-unsigned short int _ldecomp(unsigned char *ptr)
+static unsigned short int _ldecomp(unsigned char *ptr)
 {
     unsigned short int i;
     i = 0xc0 ^ ptr[0];
@@ -66,7 +66,7 @@ unsigned short int _ldecomp(unsigned char *ptr)
     return i;
 }
 
-void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
+static void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
 {
     unsigned char *label, *name;
     int x;
@@ -110,7 +110,7 @@ void _label(struct message *m, unsigned char **bufp, unsigned char **namep)
 }
 
 /* internal label matching */
-int _lmatch(struct message *m, unsigned char *l1, unsigned char *l2)
+static int _lmatch(struct message *m, unsigned char *l1, unsigned char *l2)
 {
     int len;
 
@@ -139,7 +139,7 @@ int _lmatch(struct message *m, unsigned char *l1, unsigned char *l2)
 }
 
 /* nasty, convert host into label using compression */
-int _host(struct message *m, unsigned char **bufp, unsigned char *name)
+static int _host(struct message *m, unsigned char **bufp, unsigned char *name)
 {
     unsigned char label[256], *l;
     int len = 0, x = 1, y = 0, last = 0;
@@ -194,7 +194,7 @@ int _host(struct message *m, unsigned char **bufp, unsigned char *name)
     return len;
 }
 
-int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **bufp)
+static int _rrparse(struct message *m, struct resource *rr, int count, unsigned char **bufp)
 {
     int i;
     for(i=0; i < count; i++) {
@@ -313,7 +313,7 @@ void message_qd(struct message *m, unsigned char *name, unsigned short int type,
     short2net(class, &(m->_buf));
 }
 
-void _rrappend(struct message *m, unsigned char *name, unsigned short int type, unsigned short int class, unsigned long int ttl)
+static void _rrappend(struct message *m, unsigned char *name, unsigned short int type, unsigned short int class, unsigned long int ttl)
 {
     if(m->_buf == 0) m->_buf = m->_packet + 12; /* initialization */
     _host(m, &(m->_buf), name);

@@ -28,7 +28,19 @@ AC_DEFUN([AC_REQUIRE_COMPILER],[
   AC_REQUIRE([AC_PROG_GCC_TRADITIONAL])dnl
   AC_SUBST([CFLAGS])dnl
 ])dnl
-AC_REQUIRE_COMPILER
+AC_REQUIRE_COMPILER([])dnl
+AC_ARG_VAR([CLANG_ANALYZER],[Path to the clang static analyzer])dnl
+AC_CACHE_CHECK([for the clang static analyzer],[ac_cv_path_CLANG_ANALYZER],
+  [AC_PATH_PROGS_FEATURE_CHECK([CLANG_ANALYZER],
+    [clang clang++ clang-mp-3.4 clang-mp-3.3 clang-mp-3.2 clang-mp-3.1],
+    [[${ac_path_CLANG_ANALYZER} --analyze /dev/null > /dev/null 2>&1 && \
+      ac_cv_path_CLANG_ANALYZER=${ac_path_CLANG_ANALYZER}
+      ac_path_CLANG_ANALYZER_found=:]],
+    [AC_MSG_WARN([we will not be able to do static analysis with clang])],
+    [${PATH}])dnl# end program check
+  ])dnl# end cache check
+  ## (need this extra line here)
+AC_SUBST([CLANG_ANALYZER],[${ac_cv_path_CLANG_ANALYZER}])dnl
 AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_LN_S

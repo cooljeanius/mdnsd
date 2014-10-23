@@ -28,12 +28,15 @@
 #  ifdef HAVE_TIME_H
 #   include <time.h>
 #  else
-#   warning mquery.c expects a time-related header to be included.
+#   if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+#    warning "mquery.c expects a time-related header to be included."
+#   endif /* __GNUC__ && !__STRICT_ANSI__ */
 #  endif /* HAVE_TIME_H */
 # endif /* HAVE_SYS_TIME_H */
 #endif /* TIME_WITH_SYS_TIME */
 
 #include "mdnsd.h" /* for mdnsda struct */
+#include "mquery.h" /* for functions from this file */
 #include "msock.h" /* for msock() */
 
 /* print an answer */

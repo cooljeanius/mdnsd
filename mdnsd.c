@@ -81,7 +81,9 @@ struct mdnsd_struct
     struct query *queries[SPRIME], *qlist;
 };
 
-int _namehash(const char *s)
+/* done with structs, now on to functions */
+
+static int _namehash(const char *s)
 {
     const unsigned char *name = (const unsigned char *)s;
     unsigned long h = 0, g;
@@ -97,8 +99,8 @@ int _namehash(const char *s)
     return (int)h;
 }
 
-/* basic linked list and hash primitives */
-struct query *_q_next(mdnsd d, struct query *q, char *host, int type)
+/* basic linked list and hash primitives: */
+static struct query *_q_next(mdnsd d, struct query *q, char *host, int type)
 {
     if(q == 0) q = d->queries[_namehash(host) % SPRIME];
     else q = q->next;
@@ -109,7 +111,7 @@ struct query *_q_next(mdnsd d, struct query *q, char *host, int type)
     }
     return 0;
 }
-struct cached *_c_next(mdnsd d, struct cached *c, char *host, int type)
+static struct cached *_c_next(mdnsd d, struct cached *c, char *host, int type)
 {
     if(c == 0) c = d->cache[_namehash(host) % LPRIME];
     else c = c->next;
@@ -120,7 +122,7 @@ struct cached *_c_next(mdnsd d, struct cached *c, char *host, int type)
     }
     return 0;
 }
-mdnsdr _r_next(mdnsd d, mdnsdr r, char *host, int type)
+static mdnsdr _r_next(mdnsd d, mdnsdr r, char *host, int type)
 {
     if(r == 0) r = d->published[_namehash(host) % SPRIME];
     else r = r->next;
@@ -132,7 +134,7 @@ mdnsdr _r_next(mdnsd d, mdnsdr r, char *host, int type)
     return 0;
 }
 
-int _rr_len(mdnsda rr)
+static int _rr_len(mdnsda rr)
 {
     int len = 12; /* name is always compressed (dup of prev), + normal stuff */
     if(rr->rdata) len += rr->rdlen;
@@ -142,7 +144,7 @@ int _rr_len(mdnsda rr)
     return len;
 }
 
-int _a_match(struct resource *r, mdnsda a)
+static int _a_match(struct resource *r, mdnsda a)
 { /* compares new rdata with known a, painfully */
     if(strcmp(r->name,a->name) || r->type != a->type) return 0;
     if(r->type == QTYPE_SRV && !strcmp(r->known.srv.name,a->rdname) && a->srv.port == r->known.srv.port && a->srv.weight == r->known.srv.weight && a->srv.priority == r->known.srv.priority) return 1;
@@ -151,16 +153,16 @@ int _a_match(struct resource *r, mdnsda a)
     return 0;
 }
 
-/* compare time values easily */
-int _tvdiff(struct timeval old, struct timeval new)
+/* compare time values easily: */
+static int _tvdiff(struct timeval old, struct timeval new)
 {
     int udiff = 0;
     if(old.tv_sec != new.tv_sec) udiff = (new.tv_sec - old.tv_sec) * 1000000;
     return (new.tv_usec - old.tv_usec) + udiff;
 }
 
-/* make sure not already on the list, then insert */
-void _r_push(mdnsdr *list, mdnsdr r)
+/* make sure not already on the list, then insert: */
+static void _r_push(mdnsdr *list, mdnsdr r)
 {
     mdnsdr cur;
     for(cur = *list; cur != 0; cur = cur->list) {
@@ -170,14 +172,14 @@ void _r_push(mdnsdr *list, mdnsdr r)
     *list = r;
 }
 
-/* set this r to probing, set next probe time */
-void _r_probe(mdnsd d, mdnsdr r)
+/* set this r to probing, set next probe time: */
+static void _r_probe(mdnsd d, mdnsdr r)
 {
-	/* TODO: put something here */
+	return; /* TODO: put something here for real */
 }
 
-/* force any r out right away, if valid */
-void _r_publish(mdnsd d, mdnsdr r)
+/* force any r out right away, if valid: */
+static void _r_publish(mdnsd d, mdnsdr r)
 {
     if(r->unique && r->unique < 5) return; /* probing already */
     r->tries = 0;
@@ -185,8 +187,8 @@ void _r_publish(mdnsd d, mdnsdr r)
     _r_push(&d->a_publish,r);
 }
 
-/* send r out asap */
-void _r_send(mdnsd d, mdnsdr r)
+/* send r out asap: */
+static void _r_send(mdnsd d, mdnsdr r)
 {
     if(r->tries < 4) { /* being published, make sure that happens soon */
         d->publish.tv_sec = d->now.tv_sec; d->publish.tv_usec = d->now.tv_usec;
@@ -196,14 +198,14 @@ void _r_send(mdnsd d, mdnsdr r)
         _r_push(&d->a_now,r);
         return;
     }
-    /* set d->pause.tv_usec to random 20-120 msec */
+    /* set d->pause.tv_usec to random 20-120 msec: */
     d->pause.tv_sec = d->now.tv_sec;
     d->pause.tv_usec = d->now.tv_usec + (d->now.tv_usec % 100) + 20;
     _r_push(&d->a_pause,r);
 }
 
-/* create generic unicast response struct */
-void _u_push(mdnsd d, mdnsdr r, int id, unsigned long int to, unsigned short int port)
+/* create generic unicast response struct: */
+static void _u_push(mdnsd d, mdnsdr r, int id, unsigned long int to, unsigned short int port)
 {
     struct unicast *u;
     u = (struct unicast *)malloc(sizeof(struct unicast));
@@ -216,7 +218,7 @@ void _u_push(mdnsd d, mdnsdr r, int id, unsigned long int to, unsigned short int
     d->uanswers = u;
 }
 
-void _q_reset(mdnsd d, struct query *q)
+static void _q_reset(mdnsd d, struct query *q)
 {
     struct cached *cur = 0;
     q->nexttry = 0;
@@ -228,7 +230,7 @@ void _q_reset(mdnsd d, struct query *q)
     if(q->nexttry != 0 && q->nexttry < d->checkqlist) d->checkqlist = q->nexttry;
 }
 
-void _q_done(mdnsd d, struct query *q)
+static void _q_done(mdnsd d, struct query *q)
 { /* no more query, update all its cached entries, remove from lists */
     struct cached *c = 0;
     struct query *cur;
@@ -249,7 +251,7 @@ void _q_done(mdnsd d, struct query *q)
     free(q);
 }
 
-void _r_done(mdnsd d, mdnsdr r)
+static void _r_done(mdnsd d, mdnsdr r)
 { /* buh-bye, remove from hash and free */
     mdnsdr cur = 0;
     int i = _namehash(r->rr.name) % SPRIME;
@@ -264,19 +266,19 @@ void _r_done(mdnsd d, mdnsdr r)
     free(r);
 }
 
-void _q_answer(mdnsd d, struct cached *c)
+static void _q_answer(mdnsd d, struct cached *c)
 { /* call the answer function with this cached entry */
     if(c->rr.ttl <= d->now.tv_sec) c->rr.ttl = 0;
     if(c->q->answer(&c->rr,c->q->arg) == -1) _q_done(d, c->q);
 }
 
-void _conflict(mdnsd d, mdnsdr r)
+static void _conflict(mdnsd d, mdnsdr r)
 {
     r->conflict(r->rr.name,r->rr.type,r->arg);
     mdnsd_done(d,r);
 }
 
-void _c_expire(mdnsd d, struct cached **list)
+static void _c_expire(mdnsd d, struct cached **list)
 { /* expire any old entries in this list */
     struct cached *next, *cur = *list, *last = 0;
     while(cur != 0) {
@@ -296,8 +298,8 @@ void _c_expire(mdnsd d, struct cached **list)
     }
 }
 
-/* brute force expire any old cached records */
-void _gc(mdnsd d)
+/* brute force expire any old cached records: */
+static void _gc(mdnsd d)
 {
     int i;
     for(i=0;i<LPRIME;i++) {
@@ -306,7 +308,7 @@ void _gc(mdnsd d)
     d->expireall = d->now.tv_sec + GC;
 }
 
-void _cache(mdnsd d, struct resource *r)
+static void _cache(mdnsd d, struct resource *r)
 {
     struct cached *c = 0;
     int i = _namehash(r->name) % LPRIME;
@@ -360,7 +362,7 @@ void _cache(mdnsd d, struct resource *r)
     }
 }
 
-void _a_copy(struct message *m, mdnsda a)
+static void _a_copy(struct message *m, mdnsda a)
 { /* copy the data bits only */
     if(a->rdata) { message_rdata_raw(m, a->rdata, a->rdlen); return; }
     if(a->ip) message_rdata_long(m, a->ip);
@@ -368,7 +370,7 @@ void _a_copy(struct message *m, mdnsda a)
     else if(a->rdname) message_rdata_name(m, a->rdname);
 }
 
-int _r_out(mdnsd d, struct message *m, mdnsdr *list)
+static int _r_out(mdnsd d, struct message *m, mdnsdr *list)
 { /* copy a published record into an outgoing message */
     mdnsdr r, next; /* unused (?) */
     int ret = 0;
@@ -394,9 +396,9 @@ mdnsd mdnsd_new(int class, int frame)
     i = 0;
     mdnsd d;
     d = (mdnsd)malloc(sizeof(struct mdnsd_struct));
-    bzero(d,sizeof(struct mdnsd_struct));
-    gettimeofday(&d->now,0);
-    d->expireall = d->now.tv_sec + GC;
+    bzero(d, sizeof(struct mdnsd_struct));
+    gettimeofday(&d->now, i); /* 'i' == 0 */
+    d->expireall = (d->now.tv_sec + GC);
     d->class = class;
     d->frame = frame;
     return d;
@@ -427,14 +429,17 @@ void mdnsd_flush(mdnsd d)
      * set all mdnsdr to probing
      * reset all answer lists
      */
+    return;
 }
 
 void mdnsd_free(mdnsd d)
 {
     int i;
-    i = 0;
-    /* loop through all hashes, free everything */
-	/* free answers if any */
+    for (i = 0; i < 5; i++) {
+        ; /* FIXME: this loop is currently arbitrary and does nothing */
+    }
+    /* The loop should loop through all hashes, and free everything. */
+	/* It should also free answers, if any. */
     free(d);
 }
 
@@ -543,7 +548,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
         }
     }
 
-    /* if we are in shutdown, we are done */
+    /* if we are in shutdown, then we are done: */
     if(d->shutdown) return ret;
 
     /* check if a_pause is ready */
@@ -582,7 +587,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
             _a_copy(m, &r->rr);
             ret++;
         }
-        if(ret) { /* process probes again in the future */
+        if (ret) { /* process probes again in the future */
             d->probe.tv_sec = d->now.tv_sec;
             d->probe.tv_usec = d->now.tv_usec + 250000;
             return ret;
@@ -712,12 +717,12 @@ mdnsda mdnsd_list(mdnsd d, char *host, int type, mdnsda last)
     return (mdnsda)_c_next(d,(struct cached *)last,host,type);
 }
 
-mdnsdr mdnsd_shared(mdnsd d, char *host, int type, long int ttl)
+mdnsdr mdnsd_shared(mdnsd d, const char *host, int type, long int ttl)
 {
-    int i = _namehash(host) % SPRIME;
+    int i = (_namehash(host) % SPRIME);
     mdnsdr r;
     r = (mdnsdr)malloc(sizeof(struct mdnsdr_struct));
-    bzero(r,sizeof(struct mdnsdr_struct));
+    bzero(r, sizeof(struct mdnsdr_struct));
     r->rr.name = strdup(host);
     r->rr.type = type;
     r->rr.ttl = ttl;

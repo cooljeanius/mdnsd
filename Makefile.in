@@ -293,6 +293,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CLANG_ANALYZER = @CLANG_ANALYZER@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -409,7 +410,20 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 --install
 SUBDIRS = tests
-AM_CFLAGS = -g -Wall -Wimplicit -Wno-unused -Wno-pointer-sign
+AM_CFLAGS = -g -O1 -Wall -Wextra -Wimplicit -Wformat=2 -Wswitch \
+	-Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition \
+	-Wuninitialized -Winit-self -Wparentheses -Wwrite-strings \
+	-fstack-protector -Wstack-protector \
+	-fstrict-aliasing -Wstrict-aliasing \
+	-std=gnu99 \
+	-Wno-unused -Wno-unused-parameter \
+	-Wno-pointer-sign -Wno-sign-compare
+
+RUN_CLANG_ANALYZER = $(CLANG_ANALYZER) $(DEFS) $(DEFAULT_INCLUDES) \
+	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) \
+	--analyze
+
+analysisdir = $(builddir)/clang_static_analysis
 mhttp_SOURCES = mhttp_main.c
 mhttp_LDADD = libmdnsd.la
 mquery_SOURCES = mquery_main.c
@@ -417,8 +431,12 @@ mquery_LDADD = libmdnsd.la
 lib_LTLIBRARIES = libmdnsd.la
 libmdnsd_la_SOURCES = 1035.c mdnsd.c mhttp.c mquery.c msock.c sdtxt.c xht.c
 include_HEADERS = 1035.h mdnsd.h mhttp.h mquery.h msock.h sdtxt.h xht.h
+ALL_PLISTS = 1035.plist mdnsd.plist mhttp_main.plist mhttp.plist \
+	mquery_main.plist mquery.plist msock.plist sdtxt.plist xht.plist
+
+SUFFIXES = .c .o .plist
 CLEANFILES = *~ core
-DISTCLEANFILES = .DS_Store autoscan.log
+DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log
 MAINTAINERCLEANFILES = configure.scan
 nodist_noinst_DATA = @MAINT@ configure.scan
 EXTRA_DIST = .last-cl-gen
@@ -426,7 +444,7 @@ all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .o .plist .lo .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -961,6 +979,7 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
 		config.h
@@ -1079,10 +1098,10 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 	uninstall-libLTLIBRARIES
 
-.MAKE: $(am__recursive_targets) all install-am install-strip
+.MAKE: $(am__recursive_targets) all check-am install-am install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
-	am--refresh check check-am clean clean-binPROGRAMS \
+	am--refresh check check-am check-local clean clean-binPROGRAMS \
 	clean-cscope clean-generic clean-libLTLIBRARIES clean-libtool \
 	clean-local cscope cscopelist-am ctags ctags-am dist dist-all \
 	dist-bzip2 dist-gzip dist-hook dist-lzip dist-shar dist-tarZ \
@@ -1104,6 +1123,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 
 
 all: mquery$(EXEEXT) mhttp$(EXEEXT)
+
+.c.plist:
+	$(RUN_CLANG_ANALYZER) -o $(analysisdir)/$@ $< 
 
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
@@ -1130,6 +1152,9 @@ update-ChangeLog:
 
 dist-hook: @MAINT@ update-ChangeLog
 	ls
+
+check-local:
+	$(MAKE) $(ALL_PLISTS)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
