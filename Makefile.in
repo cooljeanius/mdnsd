@@ -274,9 +274,9 @@ am__relativize = \
     dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
   done; \
   reldir="$$dir2"
-DIST_ARCHIVES = $(distdir).tar.gz
+DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2
 GZIP_ENV = --best
-DIST_TARGETS = dist-gzip
+DIST_TARGETS = dist-bzip2 dist-gzip
 distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
@@ -435,6 +435,7 @@ ALL_PLISTS = 1035.plist mdnsd.plist mhttp_main.plist mhttp.plist \
 	mquery_main.plist mquery.plist msock.plist sdtxt.plist xht.plist
 
 SUFFIXES = .c .o .plist
+MOSTLYCLEANFILES = config.h.in~
 CLEANFILES = *~ core
 DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log
 MAINTAINERCLEANFILES = configure.scan
@@ -857,7 +858,6 @@ distdir: $(DISTFILES)
 dist-gzip: distdir
 	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
 	$(am__post_remove_distdir)
-
 dist-bzip2: distdir
 	tardir=$(distdir) && $(am__tar) | BZIP2=$${BZIP2--9} bzip2 -c >$(distdir).tar.bz2
 	$(am__post_remove_distdir)
@@ -1010,6 +1010,7 @@ install-strip:
 	    "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'" install; \
 	fi
 mostlyclean-generic:
+	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
@@ -1033,7 +1034,7 @@ distclean: distclean-recursive
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags
+	distclean-hdr distclean-libtool distclean-local distclean-tags
 
 dvi: dvi-recursive
 
@@ -1080,7 +1081,8 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -rf $(top_srcdir)/autom4te.cache
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-maintainer-clean-am: distclean-am maintainer-clean-generic
+maintainer-clean-am: distclean-am maintainer-clean-generic \
+	maintainer-clean-local
 
 mostlyclean: mostlyclean-recursive
 
@@ -1107,16 +1109,17 @@ uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS \
 	dist-bzip2 dist-gzip dist-hook dist-lzip dist-shar dist-tarZ \
 	dist-xz dist-zip distcheck distclean distclean-compile \
 	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-includeHEADERS install-info \
-	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installcheck-binPROGRAMS \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	distclean-local distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am \
+	install-includeHEADERS install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installcheck-binPROGRAMS installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	maintainer-clean-local mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
 	uninstall-includeHEADERS uninstall-libLTLIBRARIES
@@ -1131,6 +1134,16 @@ clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
 	$(RM_PROG) -f *.o *~
 	$(RM_PROG) -rf *.dSYM *.cache
+
+distclean-local:
+	$(RM_PROG) -rf autom4te.cache || rmdir autom4te.cache
+
+maintainer-clean-local:
+	for plist in $(ALL_PLISTS); do \
+	  test -e $(analysisdir)/$${plist} && $(RM_PROG) -f $(analysisdir)/$${plist}; \
+	done
+	$(RM_PROG) -rf $(analysisdir) || rmdir $(analysisdir)
+	$(RM_PROG) -f $(DIST_ARCHIVES)
 
 configure.scan:
 	autoscan || touch $@
@@ -1150,7 +1163,7 @@ update-ChangeLog:
 	      && rm -f ChangeLog.tmp;                               \
 	    fi
 
-dist-hook: @MAINT@ update-ChangeLog
+dist-hook: clean @MAINT@ update-ChangeLog
 	ls
 
 check-local:

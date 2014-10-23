@@ -397,7 +397,7 @@ mdnsd mdnsd_new(int class, int frame)
     mdnsd d;
     d = (mdnsd)malloc(sizeof(struct mdnsd_struct));
     bzero(d, sizeof(struct mdnsd_struct));
-    gettimeofday(&d->now, i); /* 'i' == 0 */
+    gettimeofday(&d->now, (void *)i); /* 'i' == 0, & '0' was here before */
     d->expireall = (d->now.tv_sec + GC);
     d->class = class;
     d->frame = frame;

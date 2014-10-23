@@ -41,4 +41,5 @@ tests/atconfig
 tests/atlocal
 dist/*
 *.tar.gz
+*.tar.bz2
 mdnsd-*.*.*/*

@@ -1,3 +1,18 @@
+
+2014-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	make it easier to use the clang static analyzer from the Makefile
+
+	also try to address some of the issues that it found
+
+	Change-Id: I11fa4555a1f995fd3a4e36ccf0bce0c1680e66e9
+
+2014-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	configure tweaks, silence some warnings
+
+	Change-Id: I8075e112f872e6051d7cff812461870615310936
+
 2014-02-13  Eric Gallager  <egall@gwmail.gwu.edu>
 
 	improve check for socklen_t

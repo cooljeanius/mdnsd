@@ -43,6 +43,8 @@ SUFFIXES = .c .o .plist
 .c.plist:
 	$(RUN_CLANG_ANALYZER) -o $(analysisdir)/$@ $< 
 
+MOSTLYCLEANFILES = config.h.in~
+
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
 	$(RM_PROG) -f *.o *~
@@ -50,7 +52,17 @@ clean-local:
 
 CLEANFILES = *~ core
 
+distclean-local:
+	$(RM_PROG) -rf autom4te.cache || rmdir autom4te.cache
+
 DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log
+
+maintainer-clean-local:
+	for plist in $(ALL_PLISTS); do \
+	  test -e $(analysisdir)/$${plist} && $(RM_PROG) -f $(analysisdir)/$${plist}; \
+	done
+	$(RM_PROG) -rf $(analysisdir) || rmdir $(analysisdir)
+	$(RM_PROG) -f $(DIST_ARCHIVES)
 
 MAINTAINERCLEANFILES = configure.scan
 
@@ -76,7 +88,7 @@ update-ChangeLog:
 
 EXTRA_DIST = .last-cl-gen
 
-dist-hook: @MAINT@ update-ChangeLog
+dist-hook: clean @MAINT@ update-ChangeLog
 	ls
 
 ## using a dependency could go wrong, so call them as part of the rule

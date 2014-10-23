@@ -16766,6 +16766,52 @@ else
 $as_echo "no" >&6; }
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C/C++ restrict keyword" >&5
+$as_echo_n "checking for C/C++ restrict keyword... " >&6; }
+if ${ac_cv_c_restrict+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_c_restrict=no
+   # The order here caters to the fact that C++ does not require restrict.
+   for ac_kw in __restrict __restrict__ _Restrict restrict; do
+     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+typedef int * int_ptr;
+	int foo (int_ptr $ac_kw ip) {
+	return ip[0];
+       }
+int
+main ()
+{
+int s[1];
+	int * $ac_kw t = s;
+	t[0] = 0;
+	return foo(t)
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_c_restrict=$ac_kw
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     test "$ac_cv_c_restrict" != no && break
+   done
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_restrict" >&5
+$as_echo "$ac_cv_c_restrict" >&6; }
+
+ case $ac_cv_c_restrict in
+   restrict) ;;
+   no) $as_echo "#define restrict /**/" >>confdefs.h
+ ;;
+   *)  cat >>confdefs.h <<_ACEOF
+#define restrict $ac_cv_c_restrict
+_ACEOF
+ ;;
+ esac
+
 ac_fn_c_check_type "$LINENO" "in_addr_t" "ac_cv_type_in_addr_t" "$ac_includes_default"
 if test "x$ac_cv_type_in_addr_t" = xyes; then :
 
@@ -16811,6 +16857,17 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
+ac_fn_c_check_type "$LINENO" "size_t" "ac_cv_type_size_t" "$ac_includes_default"
+if test "x$ac_cv_type_size_t" = xyes; then :
+
+else
+
+cat >>confdefs.h <<_ACEOF
+#define size_t unsigned int
+_ACEOF
+
+fi
+
 ac_fn_c_check_type "$LINENO" "socklen_t" "ac_cv_type_socklen_t" "$ac_includes_default"
 if test "x$ac_cv_type_socklen_t" = xyes; then :
 
@@ -16821,6 +16878,8 @@ _ACEOF
 
 else
 
+  { $as_echo "$as_me:${as_lineno-$LINENO}: conftest for socklen_t may have been missing some includes; trying again" >&5
+$as_echo "$as_me: conftest for socklen_t may have been missing some includes; trying again" >&6;}
   unset ac_cv_type_socklen_t
   ac_fn_c_check_type "$LINENO" "socklen_t" "ac_cv_type_socklen_t" "
 #ifdef HAVE_SYS_TYPES_H

@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR([m4])dnl
 AC_CONFIG_TESTDIR([tests])dnl
 AC_CANONICAL_TARGET
 AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE([gnits])dnl
+AM_INIT_AUTOMAKE([dist-bzip2 gnits])dnl
 AM_MAINTAINER_MODE
 AM_SANITY_CHECK
 AC_SEARCH_LIBS([strerror],[cposix]) dnl# Used to be AC\_ISC\_POSIX
@@ -69,9 +69,12 @@ AC_C_BIGENDIAN
 AC_C_CHAR_UNSIGNED
 AC_C_CONST
 AC_C_PROTOTYPES
+AC_C_RESTRICT
 AC_CHECK_TYPES([in_addr_t])dnl
 AC_TYPE_SIGNAL
+AC_TYPE_SIZE_T
 AC_CHECK_TYPES([socklen_t],[],[
+  AC_MSG_NOTICE([conftest for socklen_t may have been missing some includes; trying again])
   unset ac_cv_type_socklen_t
   AC_CHECK_TYPES([socklen_t],[],[],[
 #ifdef HAVE_SYS_TYPES_H
