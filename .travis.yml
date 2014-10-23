@@ -1,7 +1,8 @@
 language: C
 
-# try to build
+# try to build:
 script: ./configure && make && make check
+# (once the testsuite is fixed for VPATH builds, we can do distcheck, too)
 
 compiler:
   - clang

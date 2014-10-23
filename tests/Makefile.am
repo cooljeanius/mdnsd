@@ -1,4 +1,4 @@
-# Taken from the autotest documentation
+# Originally taken from the autotest documentation.
 # http://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Making-testsuite-Scripts.html#Making-testsuite-Scripts
 
 # The `:;' works around a Bash 3.2 bug when the output is not writable.
@@ -25,6 +25,7 @@ TESTSUITE = $(srcdir)/testsuite
 check-local: atconfig atlocal $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
+##FIXME: fix this for VPATH builds:
 installcheck-local: atconfig atlocal $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
 	  $(TESTSUITEFLAGS)
@@ -32,6 +33,8 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || \
 	 $(SHELL) '$(TESTSUITE)' --clean
+
+DISTCLEANFILES = .DS_Store
 
 AUTOM4TE = $(SHELL) $(top_srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest

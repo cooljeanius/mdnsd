@@ -1,3 +1,18 @@
+2014-02-13  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	improve check for socklen_t
+
+	Change-Id: Ib16430975e82b8c21731b22f4ddd058d58886827
+
+2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	move the version number up to 0.8.0
+
+	this way I can remove the letter that was part of the version number,
+	and switch to gnits strictness
+
+	Change-Id: Icda3617c547bfb248f1925d0d96d71570726b205
+
 2014-02-11  Eric Gallager  <egall@gwmail.gwu.edu>
 
 	add a little more to the testsuite

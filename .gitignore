@@ -1,3 +1,5 @@
+# default cleanliness: ignore everything cleaned by `make distclean`
+# (including the *clean targets that it calls)
 *DS_Store*
 *~
 *.o
@@ -13,7 +15,7 @@ config.h
 confdefs.h
 conftest*
 Makefile
-Makefile.orig
+Makefile*orig
 TAGS
 ID
 GTAGS
@@ -39,3 +41,4 @@ tests/atconfig
 tests/atlocal
 dist/*
 *.tar.gz
+mdnsd-*.*.*/*

@@ -1,4 +1,4 @@
-# Automake Makefile for mdnsd
+## Automake Makefile for mdnsd
 
 ACLOCAL_AMFLAGS = -I m4 --install
 
@@ -28,7 +28,14 @@ clean-local:
 
 CLEANFILES = *~ core
 
-DISTCLEANFILES = autoscan.log
+DISTCLEANFILES = .DS_Store autoscan.log
+
+MAINTAINERCLEANFILES = configure.scan
+
+nodist_noinst_DATA = @MAINT@ configure.scan
+
+configure.scan:
+	autoscan || touch $@
 
 PHONY: update-ChangeLog
 update-ChangeLog:
@@ -46,3 +53,6 @@ update-ChangeLog:
 	    fi
 
 EXTRA_DIST = .last-cl-gen
+
+dist-hook: @MAINT@ update-ChangeLog
+	ls
