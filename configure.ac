@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR([m4])dnl
 AC_CONFIG_TESTDIR([tests])dnl
 AC_CANONICAL_TARGET
 AC_USE_SYSTEM_EXTENSIONS
-AM_INIT_AUTOMAKE([dist-bzip2 gnits])dnl
+AM_INIT_AUTOMAKE([dist-bzip2 dist-zip gnits])dnl
 AM_MAINTAINER_MODE
 AM_SANITY_CHECK
 AC_SEARCH_LIBS([strerror],[cposix]) dnl# Used to be AC\_ISC\_POSIX

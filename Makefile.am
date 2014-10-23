@@ -41,6 +41,7 @@ ALL_PLISTS = 1035.plist mdnsd.plist mhttp_main.plist mhttp.plist \
 SUFFIXES = .c .o .plist
 
 .c.plist:
+	@if test ! -d $(analysisdir); then $(MKDIR_P) $(analysisdir); fi
 	$(RUN_CLANG_ANALYZER) -o $(analysisdir)/$@ $< 
 
 MOSTLYCLEANFILES = config.h.in~
@@ -91,7 +92,8 @@ EXTRA_DIST = .last-cl-gen
 dist-hook: clean @MAINT@ update-ChangeLog
 	ls
 
-## using a dependency could go wrong, so call them as part of the rule
-## instead:
-check-local:
+## using dependencies for the plists could go wrong, so call them as part
+## of the rule instead:
+check-local: all
+	$(MKDIR_P) $(analysisdir)
 	$(MAKE) $(ALL_PLISTS)

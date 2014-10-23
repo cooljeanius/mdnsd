@@ -22,7 +22,22 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in
 TESTSUITE = $(srcdir)/testsuite
 
-check-local: atconfig atlocal $(TESTSUITE)
+AUTOMAKE_OPTIONS = no-dependencies subdir-objects -Wno-override
+
+check_PROGRAMS = $(top_builddir)/mhttp $(top_builddir)/mquery
+
+__top_builddir__mhttp_SOURCES = $(top_builddir)/mhttp_main.c
+__top_builddir__mhttp_LDADD = $(top_builddir)/libmdnsd.la
+__top_builddir__mquery_SOURCES = $(top_builddir)/mquery_main.c
+__top_builddir__mquery_LDADD = $(top_builddir)/libmdnsd.la
+
+$(top_builddir)/mhttp$(EXEEXT):
+	$(MAKE) -C $(top_builddir) mhttp$(EXEEXT)
+
+$(top_builddir)/mquery$(EXEEXT):
+	$(MAKE) -C $(top_builddir) mquery$(EXEEXT)
+
+check-local: atconfig atlocal $(TESTSUITE) $(check_PROGRAMS)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 ##FIXME: fix this for VPATH builds:
