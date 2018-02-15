@@ -14,6 +14,23 @@
 # define NON_AUTOTOOLS_BUILD_FOR_MDNSD_C 1
 #endif /* HAVE_CONFIG_H */
 
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#else
+# ifdef HAVE_MACH_TYPES_H
+#  include <mach/types.h>
+# endif /* HAVE_MACH_TYPES_H */
+#endif /* HAVE_SYS_TYPES_H */
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if defined(HAVE_INTTYPES_H) && !defined(_INTPTR_T_DEFINED)
+# include <inttypes.h>
+#endif /* HAVE_INTTYPES_H && !_INTPTR_T_DEFINED */
+#if defined(HAVE_STDINT_H) && !defined(_INTPTR_T_DEFINED)
+# include <stdint.h>
+#endif /* HAVE_STDINT_H && !_INTPTR_T_DEFINED */
+
 /* size of query/publish hashes */
 #define SPRIME 108
 /* size of cache hash */
@@ -397,7 +414,8 @@ mdnsd mdnsd_new(int class, int frame)
     mdnsd d;
     d = (mdnsd)malloc(sizeof(struct mdnsd_struct));
     bzero(d, sizeof(struct mdnsd_struct));
-    gettimeofday(&d->now, (void *)i); /* 'i' == 0, & '0' was here before */
+    gettimeofday(&d->now,
+				 (void *)(intptr_t)i); /* 'i' == 0, & '0' was here before */
     d->expireall = (d->now.tv_sec + GC);
     d->class = class;
     d->frame = frame;
@@ -592,6 +610,7 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
             d->probe.tv_usec = d->now.tv_usec + 250000;
             return ret;
         }
+		(void)last;
     }
 
     if(d->checkqlist && d->now.tv_sec >= d->checkqlist)

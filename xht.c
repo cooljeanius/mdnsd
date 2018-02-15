@@ -81,7 +81,7 @@ xht xht_new(int prime)
 static xhn _xht_set(xht h, const char *key, void *val, char flag)
 {
     int i;
-    xhn n;
+    xhn n = NULL;
 
     /* get our index for this key: */
     i = (_xhter(key) % h->prime);
@@ -100,16 +100,16 @@ static xhn _xht_set(xht h, const char *key, void *val, char flag)
         n = (xhn)malloc(sizeof(struct xhn_struct));
         /* Try to avoid a clang static analyzer warning about a null
          * pointer dereference (FIXME): */
-        if (h->zen[i].next != NULL) {
+        if ((h != NULL) && (h->zen != NULL) && (h->zen[i].next != NULL)) {
             n->next = h->zen[i].next; /* what we had originally */
+			h->zen[i].next = n;
         } else {
             n->next = NULL; /* pretty much the same thing */
         }
-        h->zen[i].next = n;
     }
 
     /* when flag is set, we manage their mem and free them first: */
-    if (n->flag) {
+    if ((n != NULL) && n->flag) {
         free((void *)n->key);
         free(n->val);
     }
