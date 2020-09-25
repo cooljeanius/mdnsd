@@ -39,6 +39,7 @@ libtool
 *.lai
 tests/atconfig
 tests/atlocal
+tests/testsuite.dir/*
 dist/*
 *.tar.gz
 *.tar.bz2
