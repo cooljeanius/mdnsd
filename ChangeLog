@@ -1,3 +1,43 @@
+2021-07-09  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	GCC has its own static analyzer now; try using it
+
+2021-07-09  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	updates for 2021
+
+2020-09-25  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .gitattributes
+
+	add ChangeLog driver
+
+2020-09-25  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .gitignore
+
+	minor addition
+
+2018-02-15  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	mark some more files as vendored
+
+2018-02-15  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	autoreconf and re-analyze for 2018
+
+2014-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	fix some things that got screwed up by the cleaning
+
+	Change-Id: I4ccc4948f5b87db22b252ff9e596630303148e2e
+
+2014-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	clean up a few further things
+
+	Change-Id: I48e112349616a26a0d96823cadb02d80c33b6f3b
+
 
 2014-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
 

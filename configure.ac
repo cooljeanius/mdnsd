@@ -2,7 +2,7 @@ dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.70])dnl
-AC_INIT([mdnsd],[0.8.0],[jer@jabber.org])dnl
+AC_INIT([mdnsd],[0.8.1],[jer@jabber.org])dnl
 AC_CONFIG_SRCDIR([1035.c])dnl
 AC_CONFIG_HEADERS([config.h])dnl
 AC_CONFIG_AUX_DIR([build-aux])dnl

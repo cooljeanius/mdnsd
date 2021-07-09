@@ -639,7 +639,9 @@ at_fn_validate_ranges ()
   done
 }
 # List of the tested programs.
-at_tested='"../mhttp"
+at_tested='"${top_builddir}/mhttp"
+"${top_builddir}/mquery"
+"../mhttp"
 "../mquery"'
 
 
@@ -925,7 +927,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-mdnsd 0.8.0 test suite: mdnsd_testsuite test groups:
+mdnsd 0.8.1 test suite: mdnsd_testsuite test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
@@ -966,7 +968,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  printf "%s\n" "$as_me (mdnsd 0.8.0)" &&
+  printf "%s\n" "$as_me (mdnsd 0.8.1)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2020 Free Software Foundation, Inc.
@@ -1151,11 +1153,11 @@ exec 5>>"$at_suite_log"
 
 # Banners and logs.
 printf "%s\n" "## ---------------------------------------- ##
-## mdnsd 0.8.0 test suite: mdnsd_testsuite. ##
+## mdnsd 0.8.1 test suite: mdnsd_testsuite. ##
 ## ---------------------------------------- ##"
 {
   printf "%s\n" "## ---------------------------------------- ##
-## mdnsd 0.8.0 test suite: mdnsd_testsuite. ##
+## mdnsd 0.8.1 test suite: mdnsd_testsuite. ##
 ## ---------------------------------------- ##"
   echo
 
@@ -2015,7 +2017,7 @@ _ASBOX
   printf "%s\n" "Please send $at_msg and all information you think might help:
 
    To: <jer@jabber.org>
-   Subject: [mdnsd 0.8.0] $as_me: $at_msg1$at_msg2
+   Subject: [mdnsd 0.8.1] $as_me: $at_msg1$at_msg2
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -2038,11 +2040,24 @@ at_xfail=no
   $at_traceon
 
 
-#TODO: fix the ".." for vpath builds
+#WIP: attempting to fix the ".." for vpath builds; needs separate fix for the
+# installcheck target, though:
+if test "x${top_builddir}" = "x"; then
+  test -z "${top_builddir}" && test -d .. && test -r .. && export top_builddir=..
+  test -z "${top_builddir}" && test -d .. && test -w .. && export top_builddir=..
+fi
+if test "x${top_builddir}" != "x"; then
+  test -n "${top_builddir}" && echo "top_builddir is ${top_builddir}"
 
 
-../mhttp --version
-../mquery --version
+  test -n "${top_builddir}" && ${top_builddir}/mhttp --version
+  test -n "${top_builddir}" && ${top_builddir}/mquery --version
+else
+  echo "assuming binaries are in parent directory"
+
+  ../mhttp --version
+  ../mquery --version
+fi
 #TODO: make mhttp and mquery accept the "--version" command-line flag
 printf "%s\n" "$at_setup_line" >"$at_check_line_file"
   set +x

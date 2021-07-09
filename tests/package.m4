@@ -4,9 +4,9 @@ m4_define([AT_PACKAGE_NAME],
 m4_define([AT_PACKAGE_TARNAME],
   [mdnsd])
 m4_define([AT_PACKAGE_VERSION],
-  [0.8.0])
+  [0.8.1])
 m4_define([AT_PACKAGE_STRING],
-  [mdnsd 0.8.0])
+  [mdnsd 0.8.1])
 m4_define([AT_PACKAGE_BUGREPORT],
   [jer@jabber.org])
 m4_define([AT_PACKAGE_URL],

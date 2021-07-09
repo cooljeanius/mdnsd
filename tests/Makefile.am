@@ -38,21 +38,25 @@ $(top_builddir)/mquery$(EXEEXT):
 	$(MAKE) -C $(top_builddir) mquery$(EXEEXT)
 
 check-local: atconfig atlocal $(TESTSUITE) $(check_PROGRAMS)
-	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+	export top_builddir=$(top_builddir) && \
+	  $(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 ##FIXME: fix this for VPATH builds:
 installcheck-local: atconfig atlocal $(TESTSUITE)
-	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
+	if test -d $(top_builddir); then \
+	  export top_builddir=$(top_builddir); fi && \
+	  $(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
 	  $(TESTSUITEFLAGS)
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || \
-	 $(SHELL) '$(TESTSUITE)' --clean
+	  export top_builddir=$(top_builddir) && $(SHELL) '$(TESTSUITE)' --clean
 
 DISTCLEANFILES = .DS_Store
 
 AUTOM4TE = $(SHELL) $(top_srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
 $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4
-	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
+	export top_builddir=$(top_builddir) && \
+	  $(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@

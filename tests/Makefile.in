@@ -631,17 +631,21 @@ $(top_builddir)/mquery$(EXEEXT):
 	$(MAKE) -C $(top_builddir) mquery$(EXEEXT)
 
 check-local: atconfig atlocal $(TESTSUITE) $(check_PROGRAMS)
-	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+	export top_builddir=$(top_builddir) && \
+	  $(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 installcheck-local: atconfig atlocal $(TESTSUITE)
-	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
+	if test -d $(top_builddir); then \
+	  export top_builddir=$(top_builddir); fi && \
+	  $(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
 	  $(TESTSUITEFLAGS)
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || \
-	 $(SHELL) '$(TESTSUITE)' --clean
+	  export top_builddir=$(top_builddir) && $(SHELL) '$(TESTSUITE)' --clean
 $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4
-	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
+	export top_builddir=$(top_builddir) && \
+	  $(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

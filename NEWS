@@ -1,3 +1,4 @@
+Version 0.8.1: Just a housekeeping update after a few years.
 Version 0.8.0: Now mdnsd builds a library in addition to the programs that
                it comes with. The programs that it includes now link
                against this library instead of putting the same object
