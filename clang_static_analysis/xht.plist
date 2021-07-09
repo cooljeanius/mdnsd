@@ -3,11 +3,7 @@
 <plist version="1.0">
 <dict>
  <key>clang_version</key>
-<string>clang version 5.0.1 (tags/RELEASE_501/final)</string>
- <key>files</key>
- <array>
-  <string>xht.c</string>
- </array>
+<string>Apple clang version 12.0.5 (clang-1205.0.22.11)</string>
  <key>diagnostics</key>
  <array>
   <dict>
@@ -285,74 +281,6 @@
           <dict>
            <key>line</key><integer>140</integer>
            <key>col</key><integer>8</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-         </array>
-        <key>end</key>
-         <array>
-          <dict>
-           <key>line</key><integer>141</integer>
-           <key>col</key><integer>5</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-          <dict>
-           <key>line</key><integer>141</integer>
-           <key>col</key><integer>10</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-         </array>
-       </dict>
-      </array>
-    </dict>
-    <dict>
-     <key>kind</key><string>control</string>
-     <key>edges</key>
-      <array>
-       <dict>
-        <key>start</key>
-         <array>
-          <dict>
-           <key>line</key><integer>141</integer>
-           <key>col</key><integer>5</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-          <dict>
-           <key>line</key><integer>141</integer>
-           <key>col</key><integer>10</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-         </array>
-        <key>end</key>
-         <array>
-          <dict>
-           <key>line</key><integer>144</integer>
-           <key>col</key><integer>5</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-          <dict>
-           <key>line</key><integer>144</integer>
-           <key>col</key><integer>10</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-         </array>
-       </dict>
-      </array>
-    </dict>
-    <dict>
-     <key>kind</key><string>control</string>
-     <key>edges</key>
-      <array>
-       <dict>
-        <key>start</key>
-         <array>
-          <dict>
-           <key>line</key><integer>144</integer>
-           <key>col</key><integer>5</integer>
-           <key>file</key><integer>0</integer>
-          </dict>
-          <dict>
-           <key>line</key><integer>144</integer>
-           <key>col</key><integer>10</integer>
            <key>file</key><integer>0</integer>
           </dict>
          </array>
@@ -727,6 +655,68 @@
         <key>end</key>
          <array>
           <dict>
+           <key>line</key><integer>99</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>99</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+       </dict>
+      </array>
+    </dict>
+    <dict>
+     <key>kind</key><string>pop-up</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>99</integer>
+      <key>col</key><integer>9</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>ranges</key>
+     <array>
+       <array>
+        <dict>
+         <key>line</key><integer>99</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+        <dict>
+         <key>line</key><integer>99</integer>
+         <key>col</key><integer>9</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+       </array>
+     </array>
+     <key>extended_message</key>
+     <string>&apos;n&apos; is equal to null</string>
+     <key>message</key>
+     <string>&apos;n&apos; is equal to null</string>
+    </dict>
+    <dict>
+     <key>kind</key><string>control</string>
+     <key>edges</key>
+      <array>
+       <dict>
+        <key>start</key>
+         <array>
+          <dict>
+           <key>line</key><integer>99</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>99</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+        <key>end</key>
+         <array>
+          <dict>
            <key>line</key><integer>100</integer>
            <key>col</key><integer>9</integer>
            <key>file</key><integer>0</integer>
@@ -790,6 +780,149 @@
         <key>end</key>
          <array>
           <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>10</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+       </dict>
+      </array>
+    </dict>
+    <dict>
+     <key>kind</key><string>control</string>
+     <key>edges</key>
+      <array>
+       <dict>
+        <key>start</key>
+         <array>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>9</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>10</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+        <key>end</key>
+         <array>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>13</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>13</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+       </dict>
+      </array>
+    </dict>
+    <dict>
+     <key>kind</key><string>pop-up</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>103</integer>
+      <key>col</key><integer>14</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>ranges</key>
+     <array>
+       <array>
+        <dict>
+         <key>line</key><integer>103</integer>
+         <key>col</key><integer>14</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+        <dict>
+         <key>line</key><integer>103</integer>
+         <key>col</key><integer>14</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+       </array>
+     </array>
+     <key>extended_message</key>
+     <string>&apos;h&apos; is not equal to NULL</string>
+     <key>message</key>
+     <string>&apos;h&apos; is not equal to NULL</string>
+    </dict>
+    <dict>
+     <key>kind</key><string>control</string>
+     <key>edges</key>
+      <array>
+       <dict>
+        <key>start</key>
+         <array>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>14</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>14</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+        <key>end</key>
+         <array>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>32</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>34</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+       </dict>
+      </array>
+    </dict>
+    <dict>
+     <key>kind</key><string>pop-up</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>103</integer>
+      <key>col</key><integer>32</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>extended_message</key>
+     <string>Field &apos;zen&apos; is equal to NULL</string>
+     <key>message</key>
+     <string>Field &apos;zen&apos; is equal to NULL</string>
+    </dict>
+    <dict>
+     <key>kind</key><string>control</string>
+     <key>edges</key>
+      <array>
+       <dict>
+        <key>start</key>
+         <array>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>32</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>103</integer>
+           <key>col</key><integer>34</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+        <key>end</key>
+         <array>
+          <dict>
            <key>line</key><integer>107</integer>
            <key>col</key><integer>13</integer>
            <key>file</key><integer>0</integer>
@@ -852,6 +985,68 @@
           <dict>
            <key>line</key><integer>112</integer>
            <key>col</key><integer>6</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+        <key>end</key>
+         <array>
+          <dict>
+           <key>line</key><integer>112</integer>
+           <key>col</key><integer>10</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>112</integer>
+           <key>col</key><integer>10</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+         </array>
+       </dict>
+      </array>
+    </dict>
+    <dict>
+     <key>kind</key><string>pop-up</string>
+     <key>location</key>
+     <dict>
+      <key>line</key><integer>112</integer>
+      <key>col</key><integer>10</integer>
+      <key>file</key><integer>0</integer>
+     </dict>
+     <key>ranges</key>
+     <array>
+       <array>
+        <dict>
+         <key>line</key><integer>112</integer>
+         <key>col</key><integer>10</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+        <dict>
+         <key>line</key><integer>112</integer>
+         <key>col</key><integer>10</integer>
+         <key>file</key><integer>0</integer>
+        </dict>
+       </array>
+     </array>
+     <key>extended_message</key>
+     <string>&apos;n&apos; is not equal to NULL</string>
+     <key>message</key>
+     <string>&apos;n&apos; is not equal to NULL</string>
+    </dict>
+    <dict>
+     <key>kind</key><string>control</string>
+     <key>edges</key>
+      <array>
+       <dict>
+        <key>start</key>
+         <array>
+          <dict>
+           <key>line</key><integer>112</integer>
+           <key>col</key><integer>10</integer>
+           <key>file</key><integer>0</integer>
+          </dict>
+          <dict>
+           <key>line</key><integer>112</integer>
+           <key>col</key><integer>10</integer>
            <key>file</key><integer>0</integer>
           </dict>
          </array>
@@ -916,7 +1111,40 @@
    <key>col</key><integer>24</integer>
    <key>file</key><integer>0</integer>
   </dict>
+  <key>ExecutedLines</key>
+  <dict>
+   <key>0</key>
+   <array>
+    <integer>81</integer>
+    <integer>82</integer>
+    <integer>83</integer>
+    <integer>84</integer>
+    <integer>87</integer>
+    <integer>90</integer>
+    <integer>91</integer>
+    <integer>99</integer>
+    <integer>100</integer>
+    <integer>103</integer>
+    <integer>107</integer>
+    <integer>112</integer>
+    <integer>132</integer>
+    <integer>133</integer>
+    <integer>134</integer>
+    <integer>136</integer>
+    <integer>140</integer>
+    <integer>141</integer>
+    <integer>142</integer>
+    <integer>143</integer>
+    <integer>144</integer>
+    <integer>145</integer>
+    <integer>146</integer>
+   </array>
   </dict>
+  </dict>
+ </array>
+ <key>files</key>
+ <array>
+  <string>xht.c</string>
  </array>
 </dict>
 </plist>

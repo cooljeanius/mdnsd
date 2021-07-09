@@ -583,9 +583,12 @@ int mdnsd_out(mdnsd d, struct message *m, unsigned long int *ip, unsigned short 
         { /* scan probe list to ask questions and process published */
             if(r->unique == 4) { /* done probing, publish */
                 mdnsdr next = r->list;
-                if(d->probing == r) {
+                if (d->probing == r) {
                     d->probing = r->list;
+                } else if (last != NULL) {
+                    last->list = r->list;
                 } else {
+                    last = r;
                     last->list = r->list;
                 }
                 r->list = 0;

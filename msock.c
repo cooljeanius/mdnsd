@@ -24,7 +24,7 @@ int msock(void)
     int s, flag = 1, ittl = 255;
     struct sockaddr_in in;
     struct ip_mreq mc;
-    char ttl = 255;
+    char ttl = (char)255;
 
     bzero(&in, sizeof(in));
     in.sin_family = AF_INET;

@@ -1,7 +1,7 @@
 dnl#                                               -*- Autoconf -*-
 dnl# Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])dnl
+AC_PREREQ([2.70])dnl
 AC_INIT([mdnsd],[0.8.0],[jer@jabber.org])dnl
 AC_CONFIG_SRCDIR([1035.c])dnl
 AC_CONFIG_HEADERS([config.h])dnl
@@ -32,7 +32,7 @@ AC_REQUIRE_COMPILER([])dnl
 AC_ARG_VAR([CLANG_ANALYZER],[Path to the clang static analyzer])dnl
 AC_CACHE_CHECK([for the clang static analyzer],[ac_cv_path_CLANG_ANALYZER],
   [AC_PATH_PROGS_FEATURE_CHECK([CLANG_ANALYZER],
-    [clang clang++ clang-mp-3.4 clang-mp-3.3 clang-mp-3.2 clang-mp-3.1],
+    [clang clang++ clang-mp-12 clang-mp-11 clang-mp-10 clang-mp-9.0],
     [[${ac_path_CLANG_ANALYZER} --analyze /dev/null > /dev/null 2>&1 && \
       ac_cv_path_CLANG_ANALYZER=${ac_path_CLANG_ANALYZER}
       ac_path_CLANG_ANALYZER_found=:]],
@@ -56,13 +56,50 @@ LT_LANG([C])dnl
 # Checks for header files.
 AC_DEFUN([AC_REQUIRE_HEADER_STDC],[
   AC_REQUIRE([AC_PROG_CPP])dnl
-  AC_REQUIRE([AC_HEADER_STDC])dnl
+  AC_REQUIRE([AC_CHECK_INCLUDES_DEFAULT])dnl
+  AC_REQUIRE([AC_PROG_EGREP])dnl
 ])dnl
 AC_REQUIRE_HEADER_STDC
-AC_HEADER_TIME
+AC_CHECK_HEADERS_ONCE([sys/time.h])
+# Obsolete code to be removed.
+if test "x${ac_cv_header_sys_time_h}" = "xyes"; then
+  AC_DEFINE([TIME_WITH_SYS_TIME],[1],
+            [Define to 1 if you can safely include both <sys/time.h>
+             and <time.h>.  This macro is obsolete.])
+fi
+# End of obsolete code.
+
 AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
-                  malloc.h malloc/malloc.h signal.h stdio.h \
-                  sys/socket.h sys/time.h time.h xlocale.h])dnl
+                  malloc.h malloc/malloc.h signal.h time.h xlocale.h])dnl
+
+if test "x${ac_cv_header_inttypes_h}" = "x"; then
+  test -z "${ac_cv_header_inttypes_h}"
+  AC_CHECK_HEADERS([inttypes.h])
+fi
+if test "x${ac_cv_header_stdint_h}" = "x"; then
+  test -z "${ac_cv_header_stdint_h}"
+  AC_CHECK_HEADERS([stdint.h])
+fi
+if test "x${ac_cv_header_stdio_h}" = "x"; then
+  test -z "${ac_cv_header_stdio_h}"
+  AC_CHECK_HEADERS([stdio.h])
+fi
+if test "x${ac_cv_header_strings_h}" = "x"; then
+  test -z "${ac_cv_header_strings_h}"
+  AC_CHECK_HEADERS([strings.h])
+fi
+if test "x${ac_cv_header_sys_socket_h}" = "x"; then
+  test -z "${ac_cv_header_sys_socket_h}"
+  AC_CHECK_HEADERS([sys/socket.h])
+fi
+if test "x${ac_cv_header_sys_time_h}" = "x"; then
+  test -z "${ac_cv_header_sys_time_h}"
+  AC_CHECK_HEADERS([sys/time.h])
+fi
+if test "x${ac_cv_header_unistd_h}" = "x"; then
+  test -z "${ac_cv_header_unistd_h}"
+  AC_CHECK_HEADERS([unistd.h])
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -71,7 +108,10 @@ AC_C_CONST
 AC_C_PROTOTYPES
 AC_C_RESTRICT
 AC_CHECK_TYPES([in_addr_t])dnl
+dnl# we provide a replacement for this macro in the m4/ directory;
+dnl# don't let autoupdate replace it:
 AC_TYPE_SIGNAL
+dnl# back to normal...
 AC_TYPE_SIZE_T
 AC_CHECK_TYPES([socklen_t],[],[
   AC_MSG_NOTICE([conftest for socklen_t may have been missing some includes; trying again])
