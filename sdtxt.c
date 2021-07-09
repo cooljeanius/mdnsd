@@ -69,7 +69,9 @@ unsigned char *sd2txt(xht h, int *len)
     if (!*len) {
         *len = 1;
         buf = (unsigned char *)malloc(1);
-        *buf = 0;
+        if (buf != NULL) {
+            *buf = 0;
+        }
         return buf;
     }
     raw = buf = (unsigned char *)malloc(*len);

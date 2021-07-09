@@ -70,6 +70,12 @@ xht xht_new(int prime)
     xht xnew;
 
     xnew = (xht)malloc(sizeof(struct xht_struct));
+    if (xnew == NULL) {
+        fprintf(stderr,
+                "\nout of memory allocating %lu bytes\n",
+                sizeof(struct xht_struct));
+        exit(EXIT_FAILURE);
+    }
     xnew->prime = prime;
     /* array of xhn size of prime: */
     xnew->zen = (xhn)malloc(sizeof(struct xhn_struct) * prime);
@@ -98,6 +104,12 @@ static xhn _xht_set(xht h, const char *key, void *val, char flag)
     /* if none, make a new one, link into this index: */
     if (n == 0) {
         n = (xhn)malloc(sizeof(struct xhn_struct));
+        if (n == NULL) {
+            fprintf(stderr,
+                    "\nout of memory allocating %lu bytes\n",
+                    sizeof(struct xhn_struct));
+            exit(EXIT_FAILURE);
+        }
         /* Try to avoid a clang static analyzer warning about a null
          * pointer dereference (FIXME): */
         if ((h != NULL) && (h->zen != NULL) && (h->zen[i].next != NULL)) {
