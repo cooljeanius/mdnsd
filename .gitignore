@@ -45,3 +45,4 @@ dist/*
 *.tar.bz2
 *.zip
 mdnsd-*.*.*/*
+.env.local
