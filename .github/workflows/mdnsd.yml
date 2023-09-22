@@ -4,12 +4,15 @@ on:
     branches:
     - "**/*"
   pull_request:
+concurrency:
+#   # This item has no matching transformer
+#   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
     - name: checkout
-      uses: actions/checkout@v3.5.0
+      uses: actions/checkout@v4.0.0
 #     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
 #     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: "./configure && make && make check"
@@ -18,3 +21,6 @@ jobs:
         compiler:
         - clang
         - gcc
+        os:
+        - ubuntu-latest
+        - macos-latest
