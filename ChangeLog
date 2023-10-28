@@ -1,3 +1,107 @@
+2023-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Merge pull request #5 from cooljeanius/dependabot/github_actions/actions/checkout-4
+
+	Bump actions/checkout from 3 to 4
+
+2023-10-23  dependabot[bot]  <49699333+dependabot[bot]@users.noreply.github.com>
+
+	Bump actions/checkout from 3 to 4
+
+	Bumps [actions/checkout](https://github.com/actions/checkout) from 3 to 4.
+	- [Release notes](https://github.com/actions/checkout/releases)
+	- [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+	- [Commits](https://github.com/actions/checkout/compare/v3...v4)
+
+	---
+	updated-dependencies:
+	- dependency-name: actions/checkout
+	  dependency-type: direct:production
+	  update-type: version-update:semver-major
+	...
+
+2023-10-23  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Create codeql.yml
+
+	switch to advanced configuration
+
+2023-10-01  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Merge pull request #3 from cooljeanius/dependabot/github_actions/actions/checkout-4.1.0
+
+	Bump actions/checkout from 4.0.0 to 4.1.0
+
+2023-10-01  dependabot[bot]  <49699333+dependabot[bot]@users.noreply.github.com>
+
+	Bump actions/checkout from 4.0.0 to 4.1.0
+
+	Bumps [actions/checkout](https://github.com/actions/checkout) from 4.0.0 to 4.1.0.
+	- [Release notes](https://github.com/actions/checkout/releases)
+	- [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+	- [Commits](https://github.com/actions/checkout/compare/v4.0.0...v4.1.0)
+
+	---
+	updated-dependencies:
+	- dependency-name: actions/checkout
+	  dependency-type: direct:production
+	  update-type: version-update:semver-minor
+	...
+
+2023-10-01  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Create dependabot.yml
+
+	use github-actions
+
+2023-09-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Re-convert cooljeanius/mdnsd to GitHub Actions (#2)
+
+	Re-running the migrator gets us a macOS build on GitHub Actions, too
+
+2023-09-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .travis.yml
+
+	remove freebsd again; turns out it doesn't work after all
+
+2023-09-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .travis.yml
+
+	let's see if we can add freebsd in there, too
+
+2023-09-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .travis.yml
+
+	explicitly specify os and dist
+
+2023-08-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update mdnsd.yml
+
+	remove concurrency
+
+2023-08-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Merge pull request #1 from cooljeanius/convert-cooljeanius-mdnsd-to-actions-20230821-120914
+
+	Convert cooljeanius/mdnsd to GitHub Actions
+
+2023-08-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Add workflow cooljeanius/mdnsd
+
+2023-08-21  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	Update .gitignore
+
+2021-07-09  Eric Gallager  <egall@gwmail.gwu.edu>
+
+	increase version number
+
 2021-07-09  Eric Gallager  <egall@gwmail.gwu.edu>
 
 	GCC has its own static analyzer now; try using it

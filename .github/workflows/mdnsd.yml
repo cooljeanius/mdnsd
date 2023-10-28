@@ -13,6 +13,7 @@ jobs:
 #     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
 #     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: "./configure && make && make check"
+    # TODO: add distcheck (currently fails with: testsuite: error: cannot find ../mhttp)
     strategy:
       matrix:
         compiler:
