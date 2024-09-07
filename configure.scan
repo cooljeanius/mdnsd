@@ -31,5 +31,4 @@ AC_CHECK_FUNCS([bzero gettimeofday inet_ntoa select socket strchr strdup strerro
 
 AC_CONFIG_FILES([Makefile
                  tests/Makefile])
-AC_CONFIG_SUBDIRS([mdnsd-0.8.1])
 AC_OUTPUT

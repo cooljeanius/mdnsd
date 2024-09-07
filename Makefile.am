@@ -48,12 +48,13 @@ MOSTLYCLEANFILES = config.h.in~
 
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
-	$(RM_PROG) -f *.o *~
+	$(RM_PROG) -f *.o *~ config/*~
 	$(RM_PROG) -rf *.dSYM *.cache
 
-CLEANFILES = *~ core
+CLEANFILES = *~ core config/*~
 
-distclean-local:
+distclean-local: @MAINT@ distdir-clean
+	$(RM_PROG) -rf .deps || rmdir .deps
 	$(RM_PROG) -rf autom4te.cache || rmdir autom4te.cache
 
 DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log

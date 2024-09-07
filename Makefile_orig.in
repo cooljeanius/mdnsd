@@ -1,5 +1,5 @@
 CC = @CC@
-RM = @RM@
+RM = @RM_PROG@
 
 all: mquery mhttp
 

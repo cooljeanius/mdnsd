@@ -461,7 +461,7 @@ ALL_PLISTS = 1035.plist mdnsd.plist mhttp_main.plist mhttp.plist \
 
 SUFFIXES = .c .o .plist
 MOSTLYCLEANFILES = config.h.in~
-CLEANFILES = *~ core
+CLEANFILES = *~ core config/*~
 DISTCLEANFILES = .DS_Store $(analysisdir)/.DS_Store autoscan.log
 MAINTAINERCLEANFILES = configure.scan
 nodist_noinst_DATA = @MAINT@ configure.scan
@@ -1183,10 +1183,11 @@ all: mquery$(EXEEXT) mhttp$(EXEEXT)
 
 clean-local:
 	$(RM_PROG) -f mquery$(EXEEXT) mhttp$(EXEEXT)
-	$(RM_PROG) -f *.o *~
+	$(RM_PROG) -f *.o *~ config/*~
 	$(RM_PROG) -rf *.dSYM *.cache
 
-distclean-local:
+distclean-local: @MAINT@ distdir-clean
+	$(RM_PROG) -rf .deps || rmdir .deps
 	$(RM_PROG) -rf autom4te.cache || rmdir autom4te.cache
 
 maintainer-clean-local:
