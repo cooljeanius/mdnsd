@@ -1,13 +1,14 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.70])
+AC_PREREQ([2.72])
 AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
 AC_CONFIG_SRCDIR([1035.h])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_AR
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
@@ -30,4 +31,5 @@ AC_CHECK_FUNCS([bzero gettimeofday inet_ntoa select socket strchr strdup strerro
 
 AC_CONFIG_FILES([Makefile
                  tests/Makefile])
+AC_CONFIG_SUBDIRS([mdnsd-0.8.1])
 AC_OUTPUT

@@ -6,19 +6,22 @@ AT_KEYWORDS([mdnsd])
 #WIP: attempting to fix the ".." for vpath builds; needs separate fix for the
 # installcheck target, though:
 if test "x${top_builddir}" = "x"; then
-  test -z "${top_builddir}" && test -d .. && test -r .. && export top_builddir=..
-  test -z "${top_builddir}" && test -d .. && test -w .. && export top_builddir=..
+  echo "top_builddir unset; attempting to set it..."
+  test -z "${top_builddir}" && test -d .. && test -r .. && export top_builddir=`cd .. && pwd`
+  test -z "${top_builddir}" && test -d .. && test -w .. && export top_builddir=`cd .. && pwd`
+elif test "x${top_builddir}" = "x.."; then
+  export top_builddir=`cd .. && pwd`
 fi
 if test "x${top_builddir}" != "x"; then
   test -n "${top_builddir}" && echo "top_builddir is ${top_builddir}"
   AT_TESTED([${top_builddir}/mhttp ${top_builddir}/mquery])
-  test -n "${top_builddir}" && ${top_builddir}/mhttp --version
-  test -n "${top_builddir}" && ${top_builddir}/mquery --version
+  test -n "${top_builddir}" && test -d ${top_builddir} && ${top_builddir}/mhttp --version
+  test -n "${top_builddir}" && test -d ${top_builddir} && ${top_builddir}/mquery --version
 else
   echo "assuming binaries are in parent directory"
   AT_TESTED([../mhttp ../mquery])
-  ../mhttp --version
-  ../mquery --version
+  test -d .. && ../mhttp --version
+  test -d .. && ../mquery --version
 fi
 #TODO: make mhttp and mquery accept the "--version" command-line flag
 AT_CLEANUP

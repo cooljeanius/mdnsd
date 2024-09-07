@@ -31,10 +31,10 @@ __top_builddir__mhttp_LDADD = $(top_builddir)/libmdnsd.la
 __top_builddir__mquery_SOURCES = $(top_builddir)/mquery_main.c
 __top_builddir__mquery_LDADD = $(top_builddir)/libmdnsd.la
 
-$(top_builddir)/mhttp$(EXEEXT):
+$(top_builddir)/mhttp$(EXEEXT): $(top_builddir)/Makefile
 	$(MAKE) -C $(top_builddir) mhttp$(EXEEXT)
 
-$(top_builddir)/mquery$(EXEEXT):
+$(top_builddir)/mquery$(EXEEXT): $(top_builddir)/Makefile
 	$(MAKE) -C $(top_builddir) mquery$(EXEEXT)
 
 check-local: atconfig atlocal $(TESTSUITE) $(check_PROGRAMS)
@@ -42,11 +42,19 @@ check-local: atconfig atlocal $(TESTSUITE) $(check_PROGRAMS)
 	  $(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 ##FIXME: fix this for VPATH builds:
-installcheck-local: atconfig atlocal $(TESTSUITE)
+installcheck-local: atconfig atlocal $(TESTSUITE) \
+  $(top_builddir)/mhttp$(EXEEXT) $(top_builddir)/mquery$(EXEEXT)
 	if test -d $(top_builddir); then \
-	  export top_builddir=$(top_builddir); fi && \
+	  abs_top_builddir=`cd $(top_builddir) && pwd`; \
+	  echo "export top_builddir=$${abs_top_builddir}"; \
+	  export top_builddir=$${abs_top_builddir}; \
 	  $(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
-	  $(TESTSUITEFLAGS)
+	    $(TESTSUITEFLAGS) $(AM_TESTSUITEFLAGS) \
+	    top_builddir=$${abs_top_builddir}; \
+	else \
+	  echo "warning: '$(top_builddir)' does not exist!" >&2; \
+	  exit 1; \
+	fi
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || \

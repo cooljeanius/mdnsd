@@ -69,23 +69,36 @@ MAINTAINERCLEANFILES = configure.scan
 
 nodist_noinst_DATA = @MAINT@ configure.scan
 
-configure.scan:
+DISTCHECK_CONFIGURE_FLAGS = --disable-silent-rules
+
+.PHONY: distdir-clean
+distdir-clean:
+	if test -d $(distdir) && test -w $(distdir); then \
+	  rm -rf $(distdir) || rmdir $(distdir) || stat $(distdir); \
+	fi
+configure.scan: distdir-clean
 	autoscan || touch $@
 
 PHONY: update-ChangeLog
+##FIXME: ChangeLog sometimes ends up with excess whitespace at the start;
+## find a way to filter that out:
 update-ChangeLog:
-	    if test -d $(srcdir)/.git; then                         \
-	       $(srcdir)/build-aux/gitlog-to-changelog              \
-	          --format='%s%n%n%b%n' --no-cluster                \
-	          --strip-tab --strip-cherry-pick                   \
-	          -- $$(cat $(srcdir)/.last-cl-gen)..               \
-	        >ChangeLog.tmp                                      \
-	      && git rev-list -n 1 HEAD >.last-cl-gen.tmp           \
-	      && (echo; cat $(srcdir)/ChangeLog) >>ChangeLog.tmp    \
-	      && mv -f ChangeLog.tmp $(srcdir)/ChangeLog            \
-	      && mv -f .last-cl-gen.tmp $(srcdir)/.last-cl-gen      \
-	      && rm -f ChangeLog.tmp;                               \
-	    fi
+	if test -d $(srcdir)/.git && test -r $(srcdir)/.last-cl-gen; then \
+	   $(srcdir)/build-aux/gitlog-to-changelog              \
+	      --format='%s%n%n%b%n' --no-cluster                \
+	      --strip-tab --strip-cherry-pick                   \
+	      -- $$(cat $(srcdir)/.last-cl-gen)..               \
+	    >ChangeLog.tmp                                      \
+	  && git rev-list -n 1 HEAD >.last-cl-gen.tmp           \
+	  && (if test -s $(srcdir)/ChangeLog; then              \
+	        echo ""; else echo "warning: empty ChangeLog";  \
+	      fi; cat $(srcdir)/ChangeLog) >>ChangeLog.tmp      \
+	  && mv -f ChangeLog.tmp $(srcdir)/ChangeLog            \
+	  && mv -f .last-cl-gen.tmp $(srcdir)/.last-cl-gen      \
+	  && rm -f ChangeLog.tmp;                               \
+	else                                                    \
+	  echo "You will have to update the ChangeLog manually."; \
+	fi
 
 EXTRA_DIST = .last-cl-gen
 

@@ -25,14 +25,13 @@ AC_DEFUN([AC_REQUIRE_COMPILER],[
   AC_REQUIRE([AC_PROG_CC])dnl
   AC_REQUIRE([AC_PROG_CPP])dnl
   AC_REQUIRE([AC_PROG_CXX])dnl
-  AC_REQUIRE([AC_PROG_GCC_TRADITIONAL])dnl
   AC_SUBST([CFLAGS])dnl
 ])dnl
 AC_REQUIRE_COMPILER([])dnl
 AC_ARG_VAR([CLANG_ANALYZER],[Path to the clang static analyzer])dnl
 AC_CACHE_CHECK([for the clang static analyzer],[ac_cv_path_CLANG_ANALYZER],
   [AC_PATH_PROGS_FEATURE_CHECK([CLANG_ANALYZER],
-    [clang clang++ clang-mp-12 clang-mp-11 clang-mp-10 clang-mp-9.0],
+    [clang clang++ clang-mp-14 clang-mp-12 clang-mp-11 clang-mp-10 clang-mp-9.0],
     [[${ac_path_CLANG_ANALYZER} --analyze /dev/null > /dev/null 2>&1 && \
       ac_cv_path_CLANG_ANALYZER=${ac_path_CLANG_ANALYZER}
       ac_path_CLANG_ANALYZER_found=:]],
@@ -42,6 +41,9 @@ AC_CACHE_CHECK([for the clang static analyzer],[ac_cv_path_CLANG_ANALYZER],
   ## (need this extra line here)
 AC_SUBST([CLANG_ANALYZER],[${ac_cv_path_CLANG_ANALYZER}])dnl
 AM_PROG_AR
+m4_ifdef([AC_PROG_AR],[
+AC_PROG_AR
+])dnl
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MKDIR_P
@@ -73,31 +75,31 @@ AC_CHECK_HEADERS([arpa/inet.h errno.h fcntl.h netinet/in.h \
                   malloc.h malloc/malloc.h signal.h time.h xlocale.h])dnl
 
 if test "x${ac_cv_header_inttypes_h}" = "x"; then
-  test -z "${ac_cv_header_inttypes_h}"
+  test -z "${ac_cv_header_inttypes_h}" || unset ac_cv_header_inttypes_h
   AC_CHECK_HEADERS([inttypes.h])
 fi
 if test "x${ac_cv_header_stdint_h}" = "x"; then
-  test -z "${ac_cv_header_stdint_h}"
+  test -z "${ac_cv_header_stdint_h}" || unset ac_cv_header_stdint_h
   AC_CHECK_HEADERS([stdint.h])
 fi
 if test "x${ac_cv_header_stdio_h}" = "x"; then
-  test -z "${ac_cv_header_stdio_h}"
+  test -z "${ac_cv_header_stdio_h}" || unset ac_cv_header_stdio_h
   AC_CHECK_HEADERS([stdio.h])
 fi
 if test "x${ac_cv_header_strings_h}" = "x"; then
-  test -z "${ac_cv_header_strings_h}"
+  test -z "${ac_cv_header_strings_h}" || unset ac_cv_header_strings_h
   AC_CHECK_HEADERS([strings.h])
 fi
 if test "x${ac_cv_header_sys_socket_h}" = "x"; then
-  test -z "${ac_cv_header_sys_socket_h}"
+  test -z "${ac_cv_header_sys_socket_h}" || unset ac_cv_header_sys_socket_h
   AC_CHECK_HEADERS([sys/socket.h])
 fi
 if test "x${ac_cv_header_sys_time_h}" = "x"; then
-  test -z "${ac_cv_header_sys_time_h}"
+  test -z "${ac_cv_header_sys_time_h}" || unset ac_cv_header_sys_time_h
   AC_CHECK_HEADERS([sys/time.h])
 fi
 if test "x${ac_cv_header_unistd_h}" = "x"; then
-  test -z "${ac_cv_header_unistd_h}"
+  test -z "${ac_cv_header_unistd_h}" || unset ac_cv_header_unistd_h
   AC_CHECK_HEADERS([unistd.h])
 fi
 
@@ -109,7 +111,7 @@ AC_C_PROTOTYPES
 AC_C_RESTRICT
 AC_CHECK_TYPES([in_addr_t])dnl
 dnl# we provide a replacement for this macro in the m4/ directory;
-dnl# don't let autoupdate replace it:
+dnl# make sure to prevent autoupdate from replacing it:
 AC_TYPE_SIGNAL
 dnl# back to normal...
 AC_TYPE_SIZE_T
