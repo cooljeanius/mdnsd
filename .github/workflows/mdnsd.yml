@@ -1,24 +1,28 @@
+---
 name: cooljeanius/mdnsd
 on:
   push:
     branches:
-    - "**/*"
+      - "**/*"
   pull_request:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-#     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
-#     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: "./configure && make && make check"
-    # TODO: add distcheck (currently fails with: testsuite: error: cannot find ../mhttp)
+      - name: checkout
+        uses: actions/checkout@v4
+        # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are
+        # currently unsupported
+        # 'compiler' was not transformed because there is no suitable equivalent
+        # in GitHub Actions
+      - run: "./configure && make && make check"
+      # TODO: add distcheck
+      # (currently fails with: testsuite: error: cannot find ../mhttp)
     strategy:
       matrix:
         compiler:
-        - clang
-        - gcc
+          - clang
+          - gcc
         os:
-        - ubuntu-latest
-        - macos-latest
+          - ubuntu-latest
+          - macos-latest
