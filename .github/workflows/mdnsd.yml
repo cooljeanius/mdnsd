@@ -15,7 +15,7 @@ jobs:
         # currently unsupported
         # 'compiler' was not transformed because there is no suitable equivalent
         # in GitHub Actions
-      - run: "./configure && make && make check"
+      - run: "./configure CC=${{ matrix.compiler }} && make && make check"
       # TODO: add distcheck
       # (currently fails with: testsuite: error: cannot find ../mhttp)
     strategy:
