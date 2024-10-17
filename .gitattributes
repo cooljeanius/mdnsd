@@ -1,4 +1,5 @@
-Makefile.in linguist-vendored
+configure.scan linguist-generated
+Makefile.in linguist-generated
 
 # Gnulib's git-merge-changelog driver:
 ChangeLog    merge=cl-merge
