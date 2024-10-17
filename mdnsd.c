@@ -787,7 +787,11 @@ void mdnsd_set_raw(mdnsd d, mdnsdr r, char *data, int len)
     free(r->rr.rdata);
     r->rr.rdata = NULL;
     r->rr.rdata = (unsigned char *)malloc(len);
-    memcpy(r->rr.rdata,data,len);
+    if (r->rr.rdata == NULL) {
+        fprintf(stderr, "Memory allocation failed in mdnsd_set_raw\n");
+        return;
+    }
+    memcpy(r->rr.rdata, data, len);
     r->rr.rdlen = len;
     _r_publish(d,r);
 }
