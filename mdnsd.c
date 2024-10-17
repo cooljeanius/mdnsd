@@ -785,6 +785,7 @@ void mdnsd_done(mdnsd d, mdnsdr r)
 void mdnsd_set_raw(mdnsd d, mdnsdr r, char *data, int len)
 {
     free(r->rr.rdata);
+    r->rr.rdata = NULL;
     r->rr.rdata = (unsigned char *)malloc(len);
     memcpy(r->rr.rdata,data,len);
     r->rr.rdlen = len;
